@@ -66,9 +66,10 @@ Open a Claude Code session. Type `/farenheit`. That's it.
 /farenheit --all                                  # scan everything
 /farenheit [product] --markets IN,TR,AR           # specific markets only
 /farenheit --proxy [product]                      # live scrape IP-based products (v2b)
-/farenheit goodrx [drug] --zip 10001,60601,90210  # intra-US zip comparison (v2a)
-/farenheit amazon [ASIN] --zip 10001,78701         # Amazon price by delivery zip
-/farenheit --category domestic --zip 10001,60601  # scan all domestic products
+/farenheit goodrx [drug]                          # intra-US zip comparison (v2a — auto-selects zips)
+/farenheit amazon [ASIN]                          # Amazon price by delivery zip (auto zips)
+/farenheit --category domestic                    # scan all domestic products (auto zips)
+/farenheit goodrx [drug] --zip 10001,90210         # override auto-zips (power users)
 ```
 
 **Categories:** `streaming` · `saas` · `software` · `cloud` · `gaming` · `hardware` · `domestic`
@@ -80,8 +81,8 @@ Open a Claude Code session. Type `/farenheit`. That's it.
 /farenheit --category gaming
 /farenheit notion --markets IN,BR,TR,US
 /farenheit --proxy grammarly
-/farenheit goodrx lisinopril --zip 10001,60601,90210,78701,98101
-/farenheit --category domestic --zip 10001,60601,90210
+/farenheit goodrx lisinopril              # auto-selects 6 zips chosen for pharmacy density variance
+/farenheit --category domestic            # all domestic products, auto zips per product
 ```
 
 ---
