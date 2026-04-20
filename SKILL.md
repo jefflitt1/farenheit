@@ -9,14 +9,16 @@ Find out how much a product costs when searched from different countries — and
 ## Usage
 
 ```
-/farenheit [product name]                  — look up a single product (international geo-pricing)
-/farenheit --category [category]           — scan a full category
-/farenheit --all                           — scan everything in the catalog
-/farenheit [product] --markets IN,TR,AR    — specific markets only
-/farenheit --proxy [product]               — v2b: live scrape IP-based products via Firecrawl geo-routing
-/farenheit goodrx lisinopril --zip 10001,60601,90210  — v2a: intra-US zip comparison
-/farenheit amazon [ASIN] --zip 10001,78701             — v2a: Amazon price by delivery zip
-/farenheit --category domestic --zip 10001,60601,90210 — v2a: scan all domestic products
+/farenheit [product name]                       — single product international geo-pricing
+/farenheit --category [category]                — scan a full category
+/farenheit --all                                — scan everything in the catalog
+/farenheit [product] --markets IN,TR,AR         — specific markets only
+/farenheit --proxy [product]                    — v2b: live scrape IP-based products via Firecrawl geo-routing
+/farenheit goodrx [drug]                        — v2a: intra-US zip comparison (auto-selects zips)
+/farenheit amazon [ASIN]                        — v2a: Amazon price by delivery zip (auto zips)
+/farenheit --category domestic                  — v2a: scan all domestic products (auto zips)
+/farenheit --portfolio [p1],[p2],[p3]           — v3: aggregate savings across your subscription stack
+/farenheit --add [url]                          — v3: auto-generate a catalog.json entry from any pricing page
 ```
 
 **Categories:** `streaming` · `saas` · `software` · `cloud` · `gaming` · `hardware` · `domestic`
@@ -26,11 +28,11 @@ Find out how much a product costs when searched from different countries — and
 /farenheit spotify
 /farenheit adobe creative cloud
 /farenheit --category gaming
-/farenheit --all
-/farenheit xbox game pass --markets IN,TR,AR,US
 /farenheit --proxy notion
-/farenheit goodrx lisinopril --zip 10001,60601,90210,78701,98101
-/farenheit --category domestic --zip 10001,60601,90210
+/farenheit goodrx lisinopril
+/farenheit --category domestic
+/farenheit --portfolio spotify,adobe creative cloud,notion,grammarly
+/farenheit --add https://linear.app/pricing
 ```
 
 ---
@@ -40,7 +42,7 @@ Find out how much a product costs when searched from different countries — and
 ### Step 1 — Parse the request and route
 
 Read the user's input and determine:
-- **Mode:** single product, category scan, or full catalog
+- **Mode:** single product, category scan, full catalog, portfolio, or --add
 - **Product match:** fuzzy match against `catalog.json` by `name`, `id`, or `vendor`
 - **Markets:** default to all markets in `markets.json`; override if user specifies `--markets`
 
@@ -48,12 +50,14 @@ If no product match is found, say so clearly and list similar entries from the c
 
 **Then apply routing logic** — determine which variance type applies before fetching anything:
 
-| If the product/category is... | Route to | How |
+| If the input is... | Route to | How |
 |---|---|---|
+| `--portfolio [products]` | **Portfolio aggregation (v3)** | Step 4d below |
+| `--add [url]` | **Auto-catalog builder (v3)** | Step 4e below |
 | Streaming, Gaming, SaaS, Software | **International** | Steps 3-5 below (Firecrawl + FX) |
-| `domestic` category products | **Intra-US zip (v2a)** | Step 4b below — `--zip` required |
-| Insurance, Home services, Healthcare | **Intra-US zip (v2a)** | Step 4b below — `--zip` required |
-| E-commerce (Amazon), Gig economy | **Both** | International first, then domestic with `--zip` |
+| `domestic` category products | **Intra-US zip (v2a)** | Step 4b — uses auto-zips from catalog |
+| Insurance, Home services, Healthcare | **Intra-US zip (v2a)** | Step 4b — uses auto-zips from catalog |
+| E-commerce (Amazon), Gig economy | **Both** | International first, then domestic |
 | Hardware (Apple, Samsung) | **International + note sales tax** | Steps 3-5, add import duty note |
 | Cloud/infra (AWS, Vercel, DO) | **Control** | Reference data only, flag as low-variance |
 | `--proxy` flag present | **Firecrawl geo-routing (v2b)** | Step 4c below — overrides `live: false` |
@@ -205,6 +209,159 @@ For each market in the product's `markets` array:
 
 **Which products benefit most from `--proxy`:** All `live: false` products in `saas`, `streaming` categories — Notion, Grammarly, Canva, Zoom, Hulu, Peacock, Paramount+. These are IP-detected services that previously could only show reference data.
 
+### Step 4d — v3: Portfolio mode (`--portfolio`)
+
+Use this path when: user invokes `/farenheit --portfolio [product1],[product2],...`
+
+Fetch live FX rates once (Step 3), then run each product through Steps 4–5, reusing the same FX table. Collect results across all products and produce a single aggregated dashboard.
+
+**Execution:**
+1. Parse comma-separated product list; fuzzy-match each against `catalog.json`
+2. Note any product not found — include in output as "not in catalog"
+3. Skip `domestic` / `control` products from the savings total — note them separately
+4. For each matched product: fetch prices (Step 4 / 4b / 4c as appropriate), calculate savings vs US baseline
+5. Sort rows by `save_per_month` descending
+
+**Output format:**
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  farenheit ── Portfolio (4 products)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Product               US/mo    Best deal            Save/mo   How to pay
+  ─────────────────────────────────────────────────────────────────────
+  Spotify Premium       $13.99   🇹🇷 Turkey   $1.27   $12.72    🟡 Gift card · Seagm
+  Adobe Creative Cloud  $59.99   🇮🇳 India    $35.99  $24.00    🟡 Wise card (INR)
+  Notion Plus           $16.00   🇮🇳 India    $5.00   $11.00    🟡 Wise card (INR)
+  Grammarly Premium     $30.00   🇮🇳 India    $10.00  $20.00    🟡 Wise card (INR)
+  ─────────────────────────────────────────────────────────────────────
+  Total at US prices:   $119.98/mo   ($1,439.76/yr)
+  Cheapest possible:    $52.26/mo    ($627.12/yr)
+  💰 You're leaving:   $67.72/mo    ($812.64/yr) on the table
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Run /farenheit [product] for full market breakdown.
+  📡 FX: [date]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+**Notes:**
+- Cheapest market per product may differ — show each independently, never blend
+- Reference data products show `(ref: [date])` in the best deal cell
+- "How to pay" column uses the Payment Method Matrix (see below, before Step 6)
+
+---
+
+### Step 4e — v3: Auto-catalog builder (`--add`)
+
+Use this path when: user invokes `/farenheit --add [url]`
+
+Reads a pricing page, classifies it, checks for duplicates, and outputs a ready-to-paste `catalog.json` entry.
+
+**Execution:**
+
+1. **Scrape the pricing page:**
+   ```json
+   { "url": "[provided url]", "formats": ["markdown"], "onlyMainContent": true }
+   ```
+
+2. **Classify from the scraped content:**
+   - `name` / `vendor` — extract from page title or branding
+   - `category` — one of: `streaming` · `saas` · `software` · `gaming` · `hardware` · `cloud` · `domestic`
+   - `plan` — the most common paid individual tier (e.g. "Plus", "Pro", "Individual")
+   - `live` — does this product use URL-addressable regional pricing?
+     - Evidence for `live: true`: URL contains `/in/`, `/tr/`, `?country=`, `?region=`; pricing page loads country-specific content from URL alone
+     - Evidence for `live: false`: single global URL, prices shown based on visitor IP; no country path variation
+   - `markets` — default to `["US", "IN", "TR", "AR", "BR", "MX"]` unless page gives stronger signal
+   - `control: true` — only if pricing is explicitly stated as globally fixed (e.g. "same price worldwide")
+
+3. **For `live: true` products:** Derive `url_pattern` by testing one non-US variant (e.g. scrape `[base]/in/pricing`). If it returns different pricing → pattern confirmed. Set placeholder: `{country_path}`.
+
+4. **For `live: false` products:** Extract US price from scraped page. Flag that other-market reference prices need manual research or `--proxy` to retrieve live.
+
+5. **Duplicate check:** Fuzzy-match product name against existing catalog. If a close match is found, say so before showing the generated entry.
+
+6. **Display generated entry:**
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  farenheit --add
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Product:   Linear
+  Vendor:    Linear Orbit Inc.
+  Category:  saas
+  Mode:      live: false  (IP-detected pricing)
+  Plan:      Plus ($8/mo US)
+  Markets:   IN, TR, AR, BR, MX, US (default — verify)
+
+  📋 Paste into catalog.json → "saas" array:
+
+  {
+    "id": "linear",
+    "name": "Linear",
+    "vendor": "Linear",
+    "category": "saas",
+    "plan": "Plus",
+    "live": false,
+    "variance_type": "international",
+    "markets": ["US", "IN", "TR", "AR", "BR", "MX"],
+    "url": "https://linear.app/pricing",
+    "reference": {
+      "US": { "local": "$8", "usd": 8.00, "currency": "USD" }
+    },
+    "reference_date": "2026-04-20",
+    "payment_notes": null
+  }
+
+  ⚠ live: false — reference prices for IN/TR/AR/BR/MX need manual research
+    or: /farenheit --proxy linear  (gets live prices via Firecrawl geo-routing)
+
+  To contribute: copy JSON → append to catalog.json → submit PR to jefflitt1/farenheit
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+---
+
+### Payment Method Matrix
+
+Used by Step 6 and Step 4d to populate the "How to pay" column. Apply in order: category default → market modifier → product-specific override.
+
+**Category defaults:**
+
+| Category | Method | Risk | Source |
+|----------|--------|------|--------|
+| `gaming` | Gift card | 🟢 LOW | Seagm · G2G · Eneba |
+| `streaming` | Gift card | 🟡 MEDIUM | Seagm · G2G |
+| `software` | Wise/Revolut card (local currency billing) | 🟡 MEDIUM | wise.com · revolut.com |
+| `saas` | Wise/Revolut card or VPN at signup | 🟡 MEDIUM | wise.com |
+| `hardware` | Import — no easy arbitrage | 🔴 HIGH | — |
+| `cloud` | No geo-pricing | 🔒 N/A | — |
+
+**Market risk modifiers:**
+
+| Market | Modifier | Reason |
+|--------|----------|--------|
+| Argentina (AR) | +1 risk level | Accounts reset ~every 6mo; economic volatility |
+| Turkey (TR) | +0 | Stable, widely used for arbitrage |
+| India (IN) | +0 | Lowest friction; Wise INR card accepted by most Stripe merchants |
+| Brazil (BR) | +0 | Stable |
+| Others | +0 | Default |
+
+**Product-specific overrides (check `payment_notes` in catalog entry if present):**
+- **Netflix:** 🔴 HIGH — aggressive geo-detection; requires local payment method, not just VPN
+- **Spotify + Argentina:** 🟡 MEDIUM — gift cards available but accounts reset ~6mo
+- **JetBrains:** 🟢 LOW — currency param accepted at checkout with any card
+- **Adobe CC:** 🟡 MEDIUM — Wise INR card reliable via Stripe BIN check
+
+**Format for "How to pay" cell:**
+`[emoji] [method] · [source]`
+
+Examples:
+- Xbox + Turkey: `🟢 Gift card · Seagm/G2G`
+- Spotify + Argentina: `🟡 Gift card (resets ~6mo) · Seagm`
+- Adobe + India: `🟡 Wise card (INR billing)`
+- Netflix + any: `🔴 Local payment + VPN required`
+
+---
+
 ### Step 5 — Calculate and rank
 
 For each product with prices across markets:
@@ -222,25 +379,30 @@ For each product with prices across markets:
 **Single product output:**
 
 ```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   farenheit ── Spotify Premium (Individual)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  Market          Local Price    USD/mo    vs. US
-  ─────────────────────────────────────────────────
-  🇦🇷 Argentina   ARS$369       $0.41    -97%  ✓
-  🇹🇷 Turkey      ₺39.99        $1.27    -91%
-  🇮🇳 India       ₹119          $1.43    -90%
-  🇧🇷 Brazil      R$10.90       $2.01    -86%
-  🇲🇽 Mexico      MX$59         $3.19    -77%
-  🇵🇱 Poland      PLN 23.99     $6.10    -56%
-  🇩🇪 Germany     €10.99        $12.03   +14%  ↑
-  🇬🇧 UK          £11.99        $15.05   +57%  ↑
-  🇺🇸 US          $13.99        $13.99   —  (baseline)
-  ─────────────────────────────────────────────────
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Market          Local        USD/mo    vs. US    How to pay
+  ──────────────────────────────────────────────────────────────────────
+  🇦🇷 Argentina   ARS$369      ~$0.41   -97%  ✓   🟡 Gift card (resets ~6mo) · Seagm
+  🇹🇷 Turkey      ₺39.99       $1.27    -91%      🟡 Gift card · Seagm/G2G
+  🇮🇳 India       ₹119         $1.43    -90%      🟡 Gift card · Seagm
+  🇧🇷 Brazil      R$10.90      $2.01    -86%      🟡 Gift card · Seagm
+  🇲🇽 Mexico      MX$59        $3.19    -77%      🟡 Gift card · Seagm
+  🇵🇱 Poland      PLN 23.99    $6.10    -56%      🟡 Gift card · Seagm
+  🇩🇪 Germany     €10.99       $12.03   +14%  ↑   —
+  🇬🇧 UK          £11.99       $15.05   +57%  ↑   —
+  🇺🇸 US          $13.99       $13.99   —  (baseline)  —
+  ──────────────────────────────────────────────────────────────────────
   💡 Cheapest: Argentina — save $13.58/mo ($163/yr)
   📡 Source: live scrape · FX: 2026-04-20
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
+
+**"How to pay" column rules:**
+- Omit `—` for markets that are MORE expensive than US (no point in paying more)
+- Use the Payment Method Matrix above to derive the cell value
+- Only include a source link where a specific platform is recommended (Seagm, G2G, wise.com)
 
 **Category scan output:** Show each product as a condensed row:
 
@@ -283,19 +445,28 @@ After the table, add 1-2 sentences of useful context:
 
 ## Notes for contributors
 
-The catalog lives at `~/.claude/skills/farenheit/catalog.json`. To add a product:
+The catalog lives at `~/.claude/skills/farenheit/catalog.json`. The fastest way to add a product:
 
-1. Determine if it's `live: true` (URL-addressable regional pages) or `live: false` (IP-based, needs reference data)
-2. Add the entry to the appropriate category array
+```
+/farenheit --add [pricing page url]
+```
+
+This auto-classifies the product, derives the URL pattern, and outputs a ready-to-paste JSON entry. Then:
+
+1. Paste the generated entry into `catalog.json` under the correct category array
+2. Add `payment_notes` if there's a product-specific gotcha not covered by the Payment Method Matrix
 3. Test with `/farenheit [product name]`
 4. Submit a PR to `jefflitt1/farenheit` on GitHub
 
-The FX normalization and output formatting are handled by this skill — you only need to provide accurate URLs and reference prices.
+The FX normalization, risk scoring, and output formatting are handled by this skill — you only need accurate URLs and reference prices.
 
 ---
 
-## Phase 2 (not yet implemented)
+## Roadmap
 
-- `--proxy` flag: route Firecrawl through residential proxy for IP-based products
-- `--watch [product]`: alert when price changes (requires Supabase persistence)
-- `--travel`: Amadeus API integration for flight/hotel geo-pricing
+- **v1:** International geo-pricing — 32 products, 12 markets, live scraping + reference data ✓
+- **v2a:** `--zip` mode — intra-US pricing via Playwright + Firecrawl (6 domestic products) ✓
+- **v2b:** `--proxy` flag — Firecrawl geo-routing for IP-based products ✓
+- **v3:** `--portfolio`, `--add`, risk-scored output ✓
+- **v4:** `--watch` mode — price change alerts (requires Supabase persistence)
+- **v5:** `--travel` mode — Amadeus API for flight/hotel geo-pricing

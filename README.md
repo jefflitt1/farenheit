@@ -67,9 +67,9 @@ Open a Claude Code session. Type `/farenheit`. That's it.
 /farenheit [product] --markets IN,TR,AR           # specific markets only
 /farenheit --proxy [product]                      # live scrape IP-based products (v2b)
 /farenheit goodrx [drug]                          # intra-US zip comparison (v2a — auto-selects zips)
-/farenheit amazon [ASIN]                          # Amazon price by delivery zip (auto zips)
 /farenheit --category domestic                    # scan all domestic products (auto zips)
-/farenheit goodrx [drug] --zip 10001,90210         # override auto-zips (power users)
+/farenheit --portfolio [p1],[p2],[p3]             # aggregate savings across your stack (v3)
+/farenheit --add [pricing url]                    # auto-generate catalog entry from any page (v3)
 ```
 
 **Categories:** `streaming` · `saas` · `software` · `cloud` · `gaming` · `hardware` · `domestic`
@@ -79,10 +79,10 @@ Open a Claude Code session. Type `/farenheit`. That's it.
 /farenheit spotify
 /farenheit adobe creative cloud
 /farenheit --category gaming
-/farenheit notion --markets IN,BR,TR,US
 /farenheit --proxy grammarly
-/farenheit goodrx lisinopril              # auto-selects 6 zips chosen for pharmacy density variance
-/farenheit --category domestic            # all domestic products, auto zips per product
+/farenheit goodrx lisinopril
+/farenheit --portfolio spotify,adobe creative cloud,notion,grammarly
+/farenheit --add https://linear.app/pricing
 ```
 
 ---
@@ -279,8 +279,9 @@ Adding `--proxy` flips any `live: false` product to a live scrape. Products that
 - **v1:** International geo-pricing — 32 products, 12 markets, live scraping + reference data ✓
 - **v2a:** `--zip` mode — intra-US pricing via Playwright + Firecrawl (6 domestic products) ✓
 - **v2b:** `--proxy` flag — Firecrawl geo-routing for IP-based products ✓
-- **v3:** `--watch` mode — price change alerts (requires Supabase persistence)
-- **v4:** `--travel` mode — Amadeus API for flight/hotel geo-pricing
+- **v3:** `--portfolio`, `--add`, risk-scored "How to pay" output ✓
+- **v4:** `--watch` mode — price change alerts (requires Supabase persistence)
+- **v5:** `--travel` mode — Amadeus API for flight/hotel geo-pricing
 
 ---
 
