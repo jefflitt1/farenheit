@@ -9,16 +9,16 @@ Find out how much a product costs when searched from different countries — and
 ## Usage
 
 ```
-/farenheit [product name]                       — single product international geo-pricing
-/farenheit --category [category]                — scan a full category
+/farenheit [any product name]                   — geo-pricing for any product (catalog or live discovery)
+/farenheit --category [category]                — scan a full catalog category
 /farenheit --all                                — scan everything in the catalog
 /farenheit [product] --markets IN,TR,AR         — specific markets only
-/farenheit --proxy [product]                    — v2b: live scrape IP-based products via Firecrawl geo-routing
+/farenheit --proxy [product]                    — force geo-proxy even for catalog-known products
 /farenheit goodrx [drug]                        — v2a: intra-US zip comparison (auto-selects zips)
 /farenheit amazon [ASIN]                        — v2a: Amazon price by delivery zip (auto zips)
 /farenheit --category domestic                  — v2a: scan all domestic products (auto zips)
-/farenheit --portfolio [p1],[p2],[p3]           — v3: aggregate savings across your subscription stack
-/farenheit --add [url]                          — v3: auto-generate a catalog.json entry from any pricing page
+/farenheit --portfolio [p1],[p2],[p3]           — aggregate savings across your subscription stack
+/farenheit --add [url]                          — cache a product entry for faster future lookups
 ```
 
 **Categories:** `streaming` · `saas` · `software` · `cloud` · `gaming` · `hardware` · `domestic`
@@ -26,11 +26,11 @@ Find out how much a product costs when searched from different countries — and
 **Examples:**
 ```
 /farenheit spotify
+/farenheit cursor
+/farenheit perplexity pro
+/farenheit chatgpt plus
 /farenheit adobe creative cloud
 /farenheit --category gaming
-/farenheit --proxy notion
-/farenheit goodrx lisinopril
-/farenheit --category domestic
 /farenheit --portfolio spotify,adobe creative cloud,notion,grammarly
 /farenheit --add https://linear.app/pricing
 ```
@@ -43,18 +43,20 @@ Find out how much a product costs when searched from different countries — and
 
 Read the user's input and determine:
 - **Mode:** single product, category scan, full catalog, portfolio, or --add
-- **Product match:** fuzzy match against `catalog.json` by `name`, `id`, or `vendor`
+- **Catalog check:** fuzzy match against `catalog.json` by `name`, `id`, or `vendor` — **fast path if found, not required**
 - **Markets:** default to all markets in `markets.json`; override if user specifies `--markets`
 
-If no product match is found, say so clearly and list similar entries from the catalog.
+**If no catalog match:** Do NOT stop. Proceed directly to **Step 2.5 — Live Discovery**. The catalog is a cache of known URL patterns, not a gate on what products can be queried.
 
 **Then apply routing logic** — determine which variance type applies before fetching anything:
 
 | If the input is... | Route to | How |
 |---|---|---|
 | `--portfolio [products]` | **Portfolio aggregation (v3)** | Step 4d below |
-| `--add [url]` | **Auto-catalog builder (v3)** | Step 4e below |
-| Streaming, Gaming, SaaS, Software | **International** | Steps 3-5 below (Firecrawl + FX) |
+| `--add [url]` | **Cache this entry** | Step 4e below — scrape, classify, write to catalog |
+| Catalog hit — `live: true` | **URL-based scrape** | Steps 3-5 (Firecrawl + FX) |
+| Catalog hit — `live: false` | **Reference data** | Skip scrape, show reference + offer `--proxy` |
+| **No catalog hit** | **Live Discovery** | Step 2.5 → Step 4f |
 | `domestic` category products | **Intra-US zip (v2a)** | Step 4b — uses auto-zips from catalog |
 | Insurance, Home services, Healthcare | **Intra-US zip (v2a)** | Step 4b — uses auto-zips from catalog |
 | E-commerce (Amazon), Gig economy | **Both** | International first, then domestic |
@@ -72,6 +74,37 @@ If no product match is found, say so clearly and list similar entries from the c
 Read both data files:
 - `~/.claude/skills/farenheit/markets.json`
 - `~/.claude/skills/farenheit/catalog.json`
+
+### Step 2.5 — Live Discovery (no catalog match)
+
+**Trigger:** Run this step when Step 1 finds no catalog match for the requested product.
+
+The catalog is a speed cache. Any product can be queried without a catalog entry — this step finds the pricing page and detects geo-variance live.
+
+**2.5a — Find the pricing page:**
+
+Use Firecrawl search to locate the canonical pricing URL:
+```json
+{ "query": "[product name] pricing", "limit": 3 }
+```
+Pick the most authoritative result (official domain, not resellers or review sites). If ambiguous, pick the first official-domain result.
+
+**2.5b — Detect URL-based geo-variance:**
+
+Test whether the product uses URL-addressable regional pricing by probing common patterns:
+1. Try appending `/in/`, `/tr/`, `/br/` to the base pricing URL — or try `?country=IN`, `?region=IN`
+2. Call `mcp__firecrawl__firecrawl_scrape` on the US URL and one variant (e.g. `/in/`)
+3. **If the variant returns different prices → `live: true` path.** Use Step 4 (URL scraping across all markets).
+4. **If the variant returns the same price or 404 → `live: false` path.** Use Step 4f (geo-proxy detection).
+
+**2.5c — Classify the product:**
+
+From the pricing page content, determine:
+- `category` — streaming · saas · software · gaming · hardware · cloud · domestic
+- `plan` — the most common paid individual tier
+- Expected variance type — use the routing table from Step 1 to infer (e.g. SaaS → international)
+
+Proceed directly to Step 3 (FX rates) then Step 4 or 4f as appropriate. No need to write a catalog entry — just run the comparison and show results.
 
 ### Step 3 — Get current exchange rates
 
@@ -320,6 +353,43 @@ Reads a pricing page, classifies it, checks for duplicates, and outputs a ready-
 
 ---
 
+### Step 4f — Live geo-comparison (no catalog entry, IP-based product)
+
+**Trigger:** Product found via Step 2.5, URL probing confirmed no regional URL variants (`live: false` path).
+
+This is the geo-proxy path for any product not in the catalog. Use Firecrawl's built-in location routing to scrape the same URL from multiple country IPs and compare the returned prices.
+
+**Markets to probe (default set — prioritized for variance signal):**
+`US · IN · TR · AR · BR · MX`
+Skip markets where the product is unlikely to be sold (e.g. don't probe AR for enterprise SaaS with custom pricing).
+
+**For each market:**
+```json
+{
+  "url": "[pricing URL from Step 2.5]",
+  "formats": ["markdown"],
+  "onlyMainContent": true,
+  "location": { "country": "IN", "languages": ["en-IN"] },
+  "proxy": "stealth"
+}
+```
+Swap `country` and `languages` per market. Run markets in parallel where Firecrawl rate limits allow.
+
+**Extract price:** From each returned page, identify the target plan's price. Use the same plan across all markets (the most common paid individual tier identified in Step 2.5c).
+
+**Classify the result:**
+- **Variance detected** → show full comparison table (Step 6 format), source: `live scrape (geo-proxy)`
+- **All markets same price** → classify as control: `🔒 [Product] — $X/mo globally. No geo-pricing detected.`
+- **Some markets return different currency/price** → show table with FX conversion (Step 5)
+- **Market returns error/blocked** → skip that market, note in output
+
+**After showing results:** If meaningful variance is found (>10% difference anywhere), offer:
+> `💾 Add to catalog? Run /farenheit --add [url] to save this entry for faster future lookups.`
+
+Do not auto-write to catalog — wait for explicit `--add` invocation.
+
+---
+
 ### Payment Method Matrix
 
 Used by Step 6 and Step 4d to populate the "How to pay" column. Apply in order: category default → market modifier → product-specific override.
@@ -437,9 +507,12 @@ After the table, add 1-2 sentences of useful context:
 ### Handling errors
 
 - **Firecrawl can't parse the page:** Skip that market, note "price not found" in the table row
-- **Product not in catalog:** Say so, suggest similar matches, offer to run with a direct URL if user provides one
+- **Product not in catalog:** Do NOT stop — run Step 2.5 live discovery instead
+- **Live discovery can't find pricing page:** Say so explicitly, ask user to provide the URL directly
+- **Geo-proxy returns blocked/CAPTCHA:** Skip that market, note "geo-blocked" in the table row
 - **FX fetch fails:** Proceed with approximate rates, add warning
 - **Category has 0 live products:** Show reference data only, note this clearly
+- **All markets same price:** Classify as control `🔒`, do not show a savings table
 
 ---
 
@@ -468,5 +541,6 @@ The FX normalization, risk scoring, and output formatting are handled by this sk
 - **v2a:** `--zip` mode — intra-US pricing via Playwright + Firecrawl (6 domestic products) ✓
 - **v2b:** `--proxy` flag — Firecrawl geo-routing for IP-based products ✓
 - **v3:** `--portfolio`, `--add`, risk-scored output ✓
-- **v4:** `--watch` mode — price change alerts (requires Supabase persistence)
-- **v5:** `--travel` mode — Amadeus API for flight/hotel geo-pricing
+- **v4:** Open-world mode — catalog is a cache, not a gate; live discovery for any product via Firecrawl search + geo-proxy ✓
+- **v5:** `--watch` mode — price change alerts (requires Supabase persistence)
+- **v6:** `--travel` mode — Amadeus API for flight/hotel geo-pricing
