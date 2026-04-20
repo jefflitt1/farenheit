@@ -61,22 +61,24 @@ Open a Claude Code session. Type `/farenheit`. That's it.
 ## Usage
 
 ```bash
-/farenheit [product]                              # international geo-pricing
+/farenheit [any product name]                     # open-world — works with or without catalog entry (v4)
 /farenheit --category [category]                  # scan a full category
-/farenheit --all                                  # scan everything
+/farenheit --all                                  # scan everything in the catalog
 /farenheit [product] --markets IN,TR,AR           # specific markets only
-/farenheit --proxy [product]                      # live scrape IP-based products (v2b)
+/farenheit --proxy [product]                      # force live scrape via geo-routing (v2b)
 /farenheit goodrx [drug]                          # intra-US zip comparison (v2a — auto-selects zips)
 /farenheit --category domestic                    # scan all domestic products (auto zips)
 /farenheit --portfolio [p1],[p2],[p3]             # aggregate savings across your stack (v3)
-/farenheit --add [pricing url]                    # auto-generate catalog entry from any page (v3)
+/farenheit --add [pricing url]                    # auto-generate a catalog entry from any page (v3)
 ```
 
 **Categories:** `streaming` · `saas` · `software` · `cloud` · `gaming` · `hardware` · `domestic`
 
 **Examples:**
 ```bash
-/farenheit spotify
+/farenheit spotify                         # known product — uses catalog cache
+/farenheit cursor                          # unknown product — live discovery (v4)
+/farenheit perplexity pro                  # unknown product — live discovery (v4)
 /farenheit adobe creative cloud
 /farenheit --category gaming
 /farenheit --proxy grammarly
@@ -216,6 +218,18 @@ A few highlights from the catalog that surprised us when building this:
 
 ---
 
+## Open-world mode (v4)
+
+The catalog is a **speed cache, not a gate**. Ask for any product and farenheit will:
+
+1. Check `catalog.json` for known URL patterns and reference data. If found → use it (fast path).
+2. If not in the catalog → search the web via Firecrawl, find the pricing page, and probe it.
+3. Classify the product: URL-based regional pricing → scrape per country. IP-based → auto-retry with geo-proxy. Same price everywhere → mark it a control and move on.
+
+No `--add` step required before a query works. Unknown products just work — they're a little slower on the first call, and the session can optionally propose a catalog entry to cache the result for next time.
+
+---
+
 ## The catalog is the IP
 
 `catalog.json` is a community-maintained list of products, regional URLs, and reference prices. PRs are the highest-value contribution — if you find a product with regional pricing not in the catalog, add it.
@@ -280,8 +294,9 @@ Adding `--proxy` flips any `live: false` product to a live scrape. Products that
 - **v2a:** `--zip` mode — intra-US pricing via Playwright + Firecrawl (6 domestic products) ✓
 - **v2b:** `--proxy` flag — Firecrawl geo-routing for IP-based products ✓
 - **v3:** `--portfolio`, `--add`, risk-scored "How to pay" output ✓
-- **v4:** `--watch` mode — price change alerts (requires Supabase persistence)
-- **v5:** `--travel` mode — Amadeus API for flight/hotel geo-pricing
+- **v4:** Open-world mode — any product works, catalog is a cache not a gate (Firecrawl search + URL probe + auto geo-proxy) ✓
+- **v5:** `--watch` mode — price change alerts (requires Supabase persistence)
+- **v6:** `--travel` mode — Amadeus API for flight/hotel geo-pricing
 
 ---
 
