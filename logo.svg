@@ -1,0 +1,73 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f0c29"/>
+      <stop offset="100%" stop-color="#1a1a2e"/>
+    </linearGradient>
+    <linearGradient id="mercuryGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4ecdc4"/>
+      <stop offset="45%" stop-color="#ffe66d"/>
+      <stop offset="100%" stop-color="#ff6b35"/>
+    </linearGradient>
+    <linearGradient id="pinGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ff6b35"/>
+      <stop offset="100%" stop-color="#e84545"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="200" height="200" rx="36" fill="url(#bgGrad)"/>
+
+  <!-- Subtle grid overlay to suggest a map/data feel -->
+  <g opacity="0.06" stroke="#ffffff" stroke-width="0.8">
+    <line x1="50" y1="0" x2="50" y2="200"/>
+    <line x1="100" y1="0" x2="100" y2="200"/>
+    <line x1="150" y1="0" x2="150" y2="200"/>
+    <line x1="0" y1="50" x2="200" y2="50"/>
+    <line x1="0" y1="100" x2="200" y2="100"/>
+    <line x1="0" y1="150" x2="200" y2="150"/>
+  </g>
+
+  <!-- Location pin shape (pointed downward) -->
+  <!-- Circle top: center 100,82 radius 46 -->
+  <!-- Point: 100,162 -->
+  <path d="M100 36 C74 36, 54 56, 54 82 C54 114, 100 162, 100 162 C100 162, 146 114, 146 82 C146 56, 126 36, 100 36 Z"
+        fill="url(#pinGrad)" opacity="0.18"/>
+  <path d="M100 36 C74 36, 54 56, 54 82 C54 114, 100 162, 100 162 C100 162, 146 114, 146 82 C146 56, 126 36, 100 36 Z"
+        fill="none" stroke="url(#pinGrad)" stroke-width="2.5"/>
+
+  <!-- Thermometer tube (inside pin) -->
+  <!-- Tube: narrow rect, top at y=50, bottom into bulb -->
+  <rect x="93" y="50" width="14" height="46" rx="7" fill="#1a1a2e" opacity="0.8"/>
+  <!-- Mercury fill inside tube -->
+  <rect x="95.5" y="54" width="9" height="38" rx="4.5" fill="url(#mercuryGrad)" filter="url(#glow)"/>
+
+  <!-- Thermometer bulb -->
+  <circle cx="100" cy="104" r="14" fill="#1a1a2e" opacity="0.8"/>
+  <circle cx="100" cy="104" r="11" fill="#ff6b35" filter="url(#glow)"/>
+
+  <!-- Scale tick marks on left of tube -->
+  <g stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round">
+    <line x1="86" y1="60" x2="91" y2="60"/>
+    <line x1="86" y1="70" x2="91" y2="70"/>
+    <line x1="86" y1="80" x2="91" y2="80"/>
+    <line x1="86" y1="90" x2="91" y2="90"/>
+  </g>
+
+  <!-- Degree symbol top-right of tube -->
+  <text x="112" y="59" font-family="system-ui, -apple-system, sans-serif" font-size="13"
+        font-weight="700" fill="rgba(255,255,255,0.7)">°</text>
+
+  <!-- Wordmark at bottom -->
+  <text x="100" y="188" text-anchor="middle"
+        font-family="system-ui, -apple-system, 'Helvetica Neue', sans-serif"
+        font-size="18" font-weight="700" letter-spacing="3"
+        fill="rgba(255,255,255,0.85)">farenheit</text>
+</svg>

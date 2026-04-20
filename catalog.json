@@ -1,0 +1,976 @@
+{
+  "_meta": {
+    "version": "1.0.0",
+    "updated": "2026-04-20",
+    "note": "live=true means regional URLs are directly addressable \u2014 no proxy needed. live=false means pricing is IP-based; reference data shown with freshness date. Community: PRs welcome to add products and correct URL patterns."
+  },
+  "streaming": [
+    {
+      "id": "spotify",
+      "name": "Spotify Premium",
+      "vendor": "Spotify",
+      "plan": "Individual",
+      "variance_type": "international",
+      "live": true,
+      "method": "url_path",
+      "url_pattern": "https://www.spotify.com/{country_path}/premium/",
+      "markets": [
+        "US",
+        "IN",
+        "BR",
+        "MX",
+        "TR",
+        "AR",
+        "PL",
+        "GB",
+        "DE"
+      ],
+      "notes": "One of the most dramatic geo-pricing examples. Turkey and Argentina historically 70-80% cheaper than US."
+    },
+    {
+      "id": "netflix-standard",
+      "name": "Netflix Standard",
+      "vendor": "Netflix",
+      "plan": "Standard (HD)",
+      "live": true,
+      "method": "url_path",
+      "url_pattern": "https://www.netflix.com/{country_path}/",
+      "markets": [
+        "US",
+        "IN",
+        "BR",
+        "MX",
+        "TR",
+        "PL",
+        "GB",
+        "DE"
+      ],
+      "notes": "India has a mobile-only plan unavailable elsewhere. Prices listed in local currency on country landing pages.",
+      "variance_type": "international"
+    },
+    {
+      "id": "youtube-premium",
+      "name": "YouTube Premium",
+      "vendor": "Google",
+      "plan": "Individual",
+      "live": false,
+      "method": "ip_based",
+      "reference": {
+        "US": {
+          "usd": 13.99,
+          "local": "$13.99",
+          "currency": "USD"
+        },
+        "IN": {
+          "usd": 1.88,
+          "local": "\u20b9159",
+          "currency": "INR"
+        },
+        "BR": {
+          "usd": 3.6,
+          "local": "R$20.90",
+          "currency": "BRL"
+        },
+        "TR": {
+          "usd": 1.5,
+          "local": "\u20ba49.99",
+          "currency": "TRY"
+        },
+        "AR": {
+          "usd": 1.2,
+          "local": "ARS$499",
+          "currency": "ARS"
+        },
+        "GB": {
+          "usd": 15.5,
+          "local": "\u00a312.99",
+          "currency": "GBP"
+        },
+        "DE": {
+          "usd": 13.99,
+          "local": "\u20ac12.99",
+          "currency": "EUR"
+        }
+      },
+      "reference_date": "2026-01",
+      "notes": "IP-based detection. Reference prices shown \u2014 verify with proxy for live data.",
+      "variance_type": "international"
+    },
+    {
+      "id": "disney-plus",
+      "name": "Disney+",
+      "vendor": "Disney",
+      "plan": "Standard",
+      "live": true,
+      "method": "url_path",
+      "url_pattern": "https://www.disneyplus.com/{country_path}/",
+      "markets": [
+        "US",
+        "IN",
+        "BR",
+        "MX",
+        "GB",
+        "DE"
+      ],
+      "notes": "India (Hotstar bundle) significantly cheaper. Latin America competitive.",
+      "variance_type": "international"
+    },
+    {
+      "id": "apple-tv-plus",
+      "name": "Apple TV+",
+      "vendor": "Apple",
+      "plan": "Monthly",
+      "live": true,
+      "method": "url_path",
+      "url_pattern": "https://www.apple.com/{country_path}/apple-tv-plus/",
+      "markets": [
+        "US",
+        "IN",
+        "BR",
+        "MX",
+        "TR",
+        "GB",
+        "DE"
+      ],
+      "notes": "Apple uses consistent country-path URL scheme across all products.",
+      "variance_type": "international"
+    },
+    {
+      "id": "crunchyroll",
+      "name": "Crunchyroll",
+      "vendor": "Crunchyroll",
+      "plan": "Fan (ad-free)",
+      "live": false,
+      "method": "ip_based",
+      "reference": {
+        "US": {
+          "usd": 7.99,
+          "local": "$7.99",
+          "currency": "USD"
+        },
+        "IN": {
+          "usd": 2.0,
+          "local": "\u20b9169",
+          "currency": "INR"
+        },
+        "BR": {
+          "usd": 3.5,
+          "local": "R$19.90",
+          "currency": "BRL"
+        },
+        "GB": {
+          "usd": 6.5,
+          "local": "\u00a35.99",
+          "currency": "GBP"
+        }
+      },
+      "reference_date": "2026-01",
+      "variance_type": "international"
+    }
+  ],
+  "saas": [
+    {
+      "id": "notion",
+      "name": "Notion",
+      "vendor": "Notion Labs",
+      "plan": "Plus (individual)",
+      "live": false,
+      "method": "ip_based",
+      "reference": {
+        "US": {
+          "usd": 10.0,
+          "local": "$10.00",
+          "currency": "USD"
+        },
+        "IN": {
+          "usd": 4.0,
+          "local": "\u20b9330",
+          "currency": "INR"
+        },
+        "BR": {
+          "usd": 5.5,
+          "local": "R$32",
+          "currency": "BRL"
+        },
+        "TR": {
+          "usd": 3.0,
+          "local": "\u20ba99",
+          "currency": "TRY"
+        },
+        "GB": {
+          "usd": 10.8,
+          "local": "\u00a38.50",
+          "currency": "GBP"
+        },
+        "DE": {
+          "usd": 10.8,
+          "local": "\u20ac10.00",
+          "currency": "EUR"
+        }
+      },
+      "reference_date": "2026-01",
+      "notes": "IP-based. India roughly 60% cheaper than US.",
+      "variance_type": "international"
+    },
+    {
+      "id": "canva-pro",
+      "name": "Canva Pro",
+      "vendor": "Canva",
+      "plan": "Pro",
+      "live": true,
+      "method": "url_path",
+      "url_pattern": "https://www.canva.com/{country_path}/pro/",
+      "markets": [
+        "US",
+        "IN",
+        "BR",
+        "MX",
+        "PH",
+        "GB",
+        "DE"
+      ],
+      "notes": "Strong regional pricing. Philippines and India significantly cheaper.",
+      "variance_type": "international"
+    },
+    {
+      "id": "grammarly-premium",
+      "name": "Grammarly Premium",
+      "vendor": "Grammarly",
+      "plan": "Premium (annual)",
+      "live": false,
+      "method": "ip_based",
+      "reference": {
+        "US": {
+          "usd": 12.0,
+          "local": "$12.00",
+          "currency": "USD"
+        },
+        "IN": {
+          "usd": 5.5,
+          "local": "\u20b9459",
+          "currency": "INR"
+        },
+        "BR": {
+          "usd": 6.0,
+          "local": "R$35",
+          "currency": "BRL"
+        },
+        "TR": {
+          "usd": 4.0,
+          "local": "\u20ba130",
+          "currency": "TRY"
+        },
+        "GB": {
+          "usd": 12.5,
+          "local": "\u00a39.99",
+          "currency": "GBP"
+        }
+      },
+      "reference_date": "2026-01",
+      "variance_type": "international"
+    },
+    {
+      "id": "1password",
+      "name": "1Password",
+      "vendor": "AgileBits",
+      "plan": "Individual",
+      "live": true,
+      "method": "url_path",
+      "url_pattern": "https://1password.com/{country_path}/",
+      "markets": [
+        "US",
+        "IN",
+        "BR",
+        "MX",
+        "GB",
+        "DE"
+      ],
+      "notes": "Clean country-path URL scheme.",
+      "variance_type": "international"
+    },
+    {
+      "id": "zoom-pro",
+      "name": "Zoom Pro",
+      "vendor": "Zoom",
+      "plan": "Pro",
+      "live": true,
+      "method": "url_path",
+      "url_pattern": "https://zoom.us/pricing",
+      "override_urls": {
+        "IN": "https://zoom.us/en-in/pricing",
+        "BR": "https://zoom.us/pt-br/pricing",
+        "DE": "https://zoom.us/de/pricing",
+        "GB": "https://zoom.us/en-gb/pricing"
+      },
+      "markets": [
+        "US",
+        "IN",
+        "BR",
+        "DE",
+        "GB"
+      ],
+      "variance_type": "international"
+    },
+    {
+      "id": "monday-basic",
+      "name": "Monday.com Basic",
+      "vendor": "Monday.com",
+      "plan": "Basic (3 seats)",
+      "live": false,
+      "method": "ip_based",
+      "reference": {
+        "US": {
+          "usd": 27.0,
+          "local": "$27.00",
+          "currency": "USD"
+        },
+        "IN": {
+          "usd": 12.0,
+          "local": "\u20b9999",
+          "currency": "INR"
+        },
+        "BR": {
+          "usd": 15.0,
+          "local": "R$87",
+          "currency": "BRL"
+        },
+        "GB": {
+          "usd": 28.5,
+          "local": "\u00a322.00",
+          "currency": "GBP"
+        }
+      },
+      "reference_date": "2026-01",
+      "variance_type": "international"
+    },
+    {
+      "id": "github-pro",
+      "name": "GitHub Pro",
+      "vendor": "GitHub / Microsoft",
+      "plan": "Pro",
+      "live": true,
+      "method": "url_path",
+      "url_pattern": "https://github.com/pricing",
+      "markets": [
+        "US"
+      ],
+      "control": true,
+      "notes": "CONTROL \u2014 GitHub does NOT geo-price. Same $4/mo globally. Useful baseline for comparisons.",
+      "variance_type": "control"
+    },
+    {
+      "id": "cursor-pro",
+      "name": "Cursor Pro",
+      "vendor": "Anysphere",
+      "plan": "Pro",
+      "live": false,
+      "method": "ip_based",
+      "reference": {
+        "US": {
+          "usd": 20.0,
+          "local": "$20.00",
+          "currency": "USD"
+        },
+        "IN": {
+          "usd": 8.0,
+          "local": "\u20b9665",
+          "currency": "INR"
+        },
+        "TR": {
+          "usd": 6.0,
+          "local": "\u20ba199",
+          "currency": "TRY"
+        }
+      },
+      "reference_date": "2026-01",
+      "notes": "AI coding tool with notable regional pricing.",
+      "variance_type": "international"
+    },
+    {
+      "id": "figma-pro",
+      "name": "Figma Professional",
+      "vendor": "Figma / Adobe",
+      "plan": "Professional",
+      "live": false,
+      "method": "ip_based",
+      "reference": {
+        "US": {
+          "usd": 15.0,
+          "local": "$15.00",
+          "currency": "USD"
+        },
+        "IN": {
+          "usd": 6.5,
+          "local": "\u20b9545",
+          "currency": "INR"
+        },
+        "BR": {
+          "usd": 8.0,
+          "local": "R$46",
+          "currency": "BRL"
+        },
+        "GB": {
+          "usd": 16.0,
+          "local": "\u00a312.99",
+          "currency": "GBP"
+        }
+      },
+      "reference_date": "2026-01",
+      "variance_type": "international"
+    },
+    {
+      "id": "loom-starter",
+      "name": "Loom Starter",
+      "vendor": "Loom / Atlassian",
+      "plan": "Starter",
+      "live": false,
+      "method": "ip_based",
+      "reference": {
+        "US": {
+          "usd": 12.5,
+          "local": "$12.50",
+          "currency": "USD"
+        },
+        "IN": {
+          "usd": 5.0,
+          "local": "\u20b9415",
+          "currency": "INR"
+        },
+        "GB": {
+          "usd": 13.0,
+          "local": "\u00a39.99",
+          "currency": "GBP"
+        }
+      },
+      "reference_date": "2026-01",
+      "variance_type": "international"
+    },
+    {
+      "id": "webflow-basic",
+      "name": "Webflow Basic",
+      "vendor": "Webflow",
+      "plan": "Basic",
+      "live": true,
+      "method": "url_path",
+      "url_pattern": "https://webflow.com/{country_path}/pricing",
+      "markets": [
+        "US",
+        "IN",
+        "BR",
+        "GB",
+        "DE"
+      ],
+      "variance_type": "international"
+    },
+    {
+      "id": "mailchimp-essentials",
+      "name": "Mailchimp Essentials",
+      "vendor": "Mailchimp / Intuit",
+      "plan": "Essentials (500 contacts)",
+      "live": false,
+      "method": "ip_based",
+      "reference": {
+        "US": {
+          "usd": 13.0,
+          "local": "$13.00",
+          "currency": "USD"
+        },
+        "IN": {
+          "usd": 5.5,
+          "local": "\u20b9459",
+          "currency": "INR"
+        },
+        "BR": {
+          "usd": 7.0,
+          "local": "R$41",
+          "currency": "BRL"
+        },
+        "GB": {
+          "usd": 13.5,
+          "local": "\u00a310.79",
+          "currency": "GBP"
+        }
+      },
+      "reference_date": "2026-01",
+      "variance_type": "international"
+    }
+  ],
+  "software": [
+    {
+      "id": "adobe-cc",
+      "name": "Adobe Creative Cloud",
+      "vendor": "Adobe",
+      "plan": "All Apps (Individual, annual)",
+      "live": true,
+      "method": "url_path",
+      "url_pattern": "https://www.adobe.com/{country_path}/creativecloud/plans.html",
+      "markets": [
+        "US",
+        "IN",
+        "BR",
+        "MX",
+        "TR",
+        "PL",
+        "GB",
+        "DE"
+      ],
+      "notes": "One of the strongest URL-accessible geo-pricing examples. India ~40% cheaper.",
+      "variance_type": "international"
+    },
+    {
+      "id": "microsoft-365-personal",
+      "name": "Microsoft 365 Personal",
+      "vendor": "Microsoft",
+      "plan": "Personal (annual)",
+      "live": true,
+      "method": "url_path",
+      "url_pattern": "https://www.microsoft.com/en-{country_path}/microsoft-365/personal",
+      "override_urls": {
+        "US": "https://www.microsoft.com/en-us/microsoft-365/personal",
+        "IN": "https://www.microsoft.com/en-in/microsoft-365/personal",
+        "GB": "https://www.microsoft.com/en-gb/microsoft-365/personal",
+        "BR": "https://www.microsoft.com/pt-br/microsoft-365/personal",
+        "DE": "https://www.microsoft.com/de-de/microsoft-365/personal",
+        "MX": "https://www.microsoft.com/es-mx/microsoft-365/personal",
+        "TR": "https://www.microsoft.com/tr-tr/microsoft-365/personal"
+      },
+      "markets": [
+        "US",
+        "IN",
+        "BR",
+        "MX",
+        "TR",
+        "GB",
+        "DE"
+      ],
+      "variance_type": "international"
+    },
+    {
+      "id": "jetbrains-all-products",
+      "name": "JetBrains All Products Pack",
+      "vendor": "JetBrains",
+      "plan": "All Products (Individual, annual)",
+      "live": true,
+      "method": "query_param",
+      "url_pattern": "https://www.jetbrains.com/store/",
+      "currency_param": "currency",
+      "markets": [
+        "US",
+        "IN",
+        "BR",
+        "TR",
+        "PL",
+        "GB",
+        "DE"
+      ],
+      "notes": "JetBrains has explicit currency selector \u2014 some of the most generous regional pricing in dev tools.",
+      "variance_type": "international"
+    },
+    {
+      "id": "autodesk-autocad",
+      "name": "Autodesk AutoCAD LT",
+      "vendor": "Autodesk",
+      "plan": "Annual subscription",
+      "live": false,
+      "method": "ip_based",
+      "reference": {
+        "US": {
+          "usd": 60.0,
+          "local": "$60.00/mo",
+          "currency": "USD"
+        },
+        "IN": {
+          "usd": 30.0,
+          "local": "\u20b92,490/mo",
+          "currency": "INR"
+        },
+        "BR": {
+          "usd": 35.0,
+          "local": "R$200/mo",
+          "currency": "BRL"
+        },
+        "GB": {
+          "usd": 62.0,
+          "local": "\u00a349/mo",
+          "currency": "GBP"
+        }
+      },
+      "reference_date": "2026-01",
+      "variance_type": "international"
+    }
+  ],
+  "cloud": [
+    {
+      "id": "vercel-pro",
+      "name": "Vercel Pro",
+      "vendor": "Vercel",
+      "plan": "Pro",
+      "live": false,
+      "method": "ip_based",
+      "notes": "Vercel bills in USD globally \u2014 limited geo-pricing. Included as a CONTROL example.",
+      "control": true,
+      "reference": {
+        "US": {
+          "usd": 20.0,
+          "local": "$20.00",
+          "currency": "USD"
+        }
+      },
+      "reference_date": "2026-01",
+      "variance_type": "control"
+    },
+    {
+      "id": "cloudflare-pro",
+      "name": "Cloudflare Pro",
+      "vendor": "Cloudflare",
+      "plan": "Pro",
+      "live": true,
+      "method": "url_path",
+      "url_pattern": "https://www.cloudflare.com/{country_path}/plans/",
+      "markets": [
+        "US",
+        "IN",
+        "BR",
+        "GB",
+        "DE"
+      ],
+      "notes": "Cloudflare Pro is $20/mo globally in USD \u2014 another good control. Country pages may show local currency.",
+      "variance_type": "international"
+    },
+    {
+      "id": "digitalocean-basic-droplet",
+      "name": "DigitalOcean Basic Droplet",
+      "vendor": "DigitalOcean",
+      "plan": "1GB/1vCPU",
+      "live": false,
+      "method": "ip_based",
+      "notes": "DigitalOcean bills in USD globally. CONTROL example.",
+      "control": true,
+      "reference": {
+        "US": {
+          "usd": 6.0,
+          "local": "$6.00",
+          "currency": "USD"
+        }
+      },
+      "reference_date": "2026-01",
+      "variance_type": "control"
+    },
+    {
+      "id": "netlify-pro",
+      "name": "Netlify Pro",
+      "vendor": "Netlify",
+      "plan": "Pro",
+      "live": false,
+      "method": "ip_based",
+      "notes": "Netlify bills in USD globally. CONTROL example.",
+      "control": true,
+      "reference": {
+        "US": {
+          "usd": 19.0,
+          "local": "$19.00",
+          "currency": "USD"
+        }
+      },
+      "reference_date": "2026-01",
+      "variance_type": "control"
+    }
+  ],
+  "gaming": [
+    {
+      "id": "xbox-game-pass-ultimate",
+      "name": "Xbox Game Pass Ultimate",
+      "vendor": "Microsoft",
+      "plan": "Ultimate",
+      "live": true,
+      "method": "url_path",
+      "url_pattern": "https://www.xbox.com/{country_path}/xbox-game-pass",
+      "override_urls": {
+        "US": "https://www.xbox.com/en-US/xbox-game-pass",
+        "IN": "https://www.xbox.com/en-IN/xbox-game-pass",
+        "BR": "https://www.xbox.com/pt-BR/xbox-game-pass",
+        "TR": "https://www.xbox.com/tr-TR/xbox-game-pass",
+        "GB": "https://www.xbox.com/en-GB/xbox-game-pass",
+        "DE": "https://www.xbox.com/de-DE/xbox-game-pass",
+        "AR": "https://www.xbox.com/es-AR/xbox-game-pass"
+      },
+      "markets": [
+        "US",
+        "IN",
+        "BR",
+        "TR",
+        "AR",
+        "GB",
+        "DE"
+      ],
+      "notes": "Turkey and Argentina dramatically cheaper. Often cited as the biggest gaming geo-arbitrage.",
+      "variance_type": "international"
+    },
+    {
+      "id": "playstation-plus-essential",
+      "name": "PlayStation Plus Essential",
+      "vendor": "Sony",
+      "plan": "Essential (annual)",
+      "live": true,
+      "method": "url_path",
+      "url_pattern": "https://www.playstation.com/{country_path}/ps-plus/",
+      "override_urls": {
+        "US": "https://www.playstation.com/en-us/ps-plus/",
+        "IN": "https://www.playstation.com/en-in/ps-plus/",
+        "BR": "https://www.playstation.com/pt-br/ps-plus/",
+        "TR": "https://www.playstation.com/tr-tr/ps-plus/",
+        "MX": "https://www.playstation.com/es-mx/ps-plus/",
+        "GB": "https://www.playstation.com/en-gb/ps-plus/",
+        "DE": "https://www.playstation.com/de-de/ps-plus/"
+      },
+      "markets": [
+        "US",
+        "IN",
+        "BR",
+        "TR",
+        "MX",
+        "GB",
+        "DE"
+      ],
+      "variance_type": "international"
+    },
+    {
+      "id": "nintendo-switch-online",
+      "name": "Nintendo Switch Online",
+      "vendor": "Nintendo",
+      "plan": "Individual (annual)",
+      "live": true,
+      "method": "url_path",
+      "url_pattern": "https://www.nintendo.com/{country_path}/switch/online/",
+      "override_urls": {
+        "US": "https://www.nintendo.com/us/switch/online/",
+        "IN": "https://www.nintendo.com/en_IN/switch/online/",
+        "BR": "https://www.nintendo.com/pt_BR/switch/online/",
+        "GB": "https://www.nintendo.co.uk/Nintendo-Switch/Nintendo-Switch-Online/",
+        "DE": "https://www.nintendo.de/Nintendo-Switch/Nintendo-Switch-Online/"
+      },
+      "markets": [
+        "US",
+        "IN",
+        "BR",
+        "GB",
+        "DE"
+      ],
+      "variance_type": "international"
+    },
+    {
+      "id": "steam-note",
+      "name": "Steam (game prices)",
+      "vendor": "Valve",
+      "plan": "Per-game pricing",
+      "live": true,
+      "method": "query_param",
+      "url_pattern": "https://store.steampowered.com/app/{steam_app_id}/?cc={market_lower}",
+      "notes": "Steam uses ?cc= param for country code. Prices vary per game. Use with a specific app ID \u2014 e.g. ?cc=tr for Turkey, ?cc=ar for Argentina. Turkey and Argentina routinely 70-85% cheaper. This entry is a template; specific games should be queried directly.",
+      "example_url": "https://store.steampowered.com/app/1245620/?cc=tr",
+      "markets": [
+        "US",
+        "IN",
+        "BR",
+        "TR",
+        "AR",
+        "PL",
+        "GB",
+        "DE"
+      ],
+      "requires_app_id": true,
+      "variance_type": "international"
+    }
+  ],
+  "domestic": [
+    {
+      "id": "goodrx",
+      "name": "GoodRx",
+      "vendor": "GoodRx",
+      "plan": "Cash price (no insurance)",
+      "variance_type": "domestic",
+      "live": true,
+      "method": "url_param_zip",
+      "url_pattern": "https://www.goodrx.com/{drug_name}?zip={zip}",
+      "example_url": "https://www.goodrx.com/lisinopril?zip=10001",
+      "notes": "Same prescription, radically different cash price by zip and pharmacy chain. URL-param zip — no browser automation needed. Requires drug name as input. One of the strongest domestic variance signals.",
+      "requires_drug_name": true,
+      "example_drug": "lisinopril",
+      "zip_variance_axis": "pharmacy chain density + competition — sparse rural markets often have HIGHER prices than competitive urban ones",
+      "default_zips": [
+        { "zip": "10001", "city": "New York, NY", "note": "maximum chain density, all major pharmacies competing" },
+        { "zip": "60601", "city": "Chicago, IL", "note": "large Midwest market" },
+        { "zip": "78701", "city": "Austin, TX", "note": "high-growth Sun Belt market" },
+        { "zip": "33101", "city": "Miami, FL", "note": "different chain mix, Latino pharmacy segment" },
+        { "zip": "50301", "city": "Des Moines, IA", "note": "mid-size market, fewer chains" },
+        { "zip": "39759", "city": "Starkville, MS", "note": "small town, limited competition — often most expensive" }
+      ]
+    },
+    {
+      "id": "amazon",
+      "name": "Amazon (product price by delivery zip)",
+      "vendor": "Amazon",
+      "plan": "Per-product pricing",
+      "variance_type": "domestic",
+      "live": true,
+      "method": "browser_zip",
+      "browser_steps": "Navigate to product page → click 'Deliver to' → enter zip → read displayed price",
+      "url_pattern": "https://www.amazon.com/dp/{asin}",
+      "notes": "Same ASIN can show different prices by delivery zip due to seller shipping zones and regional fulfillment center proximity.",
+      "requires_asin": true,
+      "zip_variance_axis": "fulfillment center proximity + seller shipping zone tiers — remote markets pay more",
+      "default_zips": [
+        { "zip": "10001", "city": "New York, NY", "note": "NE hub, fast fulfillment" },
+        { "zip": "60601", "city": "Chicago, IL", "note": "Midwest hub" },
+        { "zip": "90001", "city": "Los Angeles, CA", "note": "West Coast hub" },
+        { "zip": "78701", "city": "Austin, TX", "note": "South Central" },
+        { "zip": "97201", "city": "Portland, OR", "note": "Pacific NW" },
+        { "zip": "99501", "city": "Anchorage, AK", "note": "remote — highest shipping surcharge" }
+      ]
+    },
+    {
+      "id": "instacart",
+      "name": "Instacart",
+      "vendor": "Instacart",
+      "plan": "Service fees + delivery",
+      "variance_type": "domestic",
+      "live": true,
+      "method": "browser_zip",
+      "browser_steps": "Navigate to instacart.com → enter zip → select store → read service fee and markup",
+      "url_pattern": "https://www.instacart.com",
+      "notes": "Service fees, surge pricing, and per-item markup vary by market density and local grocery competition.",
+      "zip_variance_axis": "grocery store density + Instacart market penetration — sprawl suburbs often more expensive than dense urban",
+      "default_zips": [
+        { "zip": "10001", "city": "New York, NY", "note": "highest density, strong competition" },
+        { "zip": "60601", "city": "Chicago, IL", "note": "large urban market" },
+        { "zip": "90210", "city": "Beverly Hills, CA", "note": "affluent, premium markup" },
+        { "zip": "78701", "city": "Austin, TX", "note": "rapidly growing market" },
+        { "zip": "85001", "city": "Phoenix, AZ", "note": "sprawl city, delivery distance drives cost" },
+        { "zip": "50301", "city": "Des Moines, IA", "note": "low-density, limited Instacart presence" }
+      ]
+    },
+    {
+      "id": "doordash",
+      "name": "DoorDash",
+      "vendor": "DoorDash",
+      "plan": "Delivery fee + service fee",
+      "variance_type": "domestic",
+      "live": true,
+      "method": "browser_zip",
+      "browser_steps": "Navigate to doordash.com → enter address/zip → select restaurant → read delivery + service fees",
+      "url_pattern": "https://www.doordash.com",
+      "notes": "Delivery fees and service fees vary by restaurant density, driver supply, and market maturity.",
+      "zip_variance_axis": "driver supply/demand density — thin markets (low driver density) charge significantly more",
+      "default_zips": [
+        { "zip": "10001", "city": "New York, NY", "note": "saturated market, high driver supply" },
+        { "zip": "60601", "city": "Chicago, IL", "note": "mature market" },
+        { "zip": "78701", "city": "Austin, TX", "note": "college-heavy, high demand market" },
+        { "zip": "85001", "city": "Phoenix, AZ", "note": "sprawl — distance drives fees up" },
+        { "zip": "33101", "city": "Miami, FL", "note": "high tourism, variable demand" },
+        { "zip": "57501", "city": "Pierre, SD", "note": "state capital but tiny market — highest fees" }
+      ]
+    },
+    {
+      "id": "the-zebra",
+      "name": "The Zebra (auto insurance)",
+      "vendor": "The Zebra",
+      "plan": "Auto insurance quote",
+      "variance_type": "domestic",
+      "live": true,
+      "method": "browser_zip",
+      "browser_steps": "Navigate to thezebra.com → enter zip + driver profile → read quote range",
+      "url_pattern": "https://www.thezebra.com",
+      "notes": "Auto insurance rates are almost entirely state-driven, then zip-level within state. Same driver profile, same car, 3-5x price difference across states.",
+      "zip_variance_axis": "state insurance regulation + urban crime/accident rates — MI/LA/FL are consistently most expensive, ME/IA/ID cheapest",
+      "default_zips": [
+        { "zip": "48226", "city": "Detroit, MI", "note": "historically highest auto insurance rates in the US" },
+        { "zip": "70112", "city": "New Orleans, LA", "note": "2nd highest nationally" },
+        { "zip": "33101", "city": "Miami, FL", "note": "fraud-heavy market, high rates" },
+        { "zip": "07001", "city": "Avenel, NJ", "note": "high-cost state" },
+        { "zip": "52401", "city": "Cedar Rapids, IA", "note": "low-cost state benchmark" },
+        { "zip": "04101", "city": "Portland, ME", "note": "one of the cheapest states for auto insurance" }
+      ]
+    },
+    {
+      "id": "thumbtack",
+      "name": "Thumbtack (home services)",
+      "vendor": "Thumbtack",
+      "plan": "Pro contractor quote",
+      "variance_type": "domestic",
+      "live": true,
+      "method": "browser_zip",
+      "browser_steps": "Navigate to thumbtack.com → enter job type + zip → read average cost estimate",
+      "url_pattern": "https://www.thumbtack.com/cost/{job_type}/",
+      "notes": "Home service quotes vary 3-5x by local labor market and cost of living. NYC vs. Des Moines is the canonical example.",
+      "requires_job_type": true,
+      "example_jobs": ["house-cleaning", "lawn-mowing", "hvac-repair", "plumber"],
+      "zip_variance_axis": "local labor market + cost of living index — SF/NYC highest, rural South/Midwest lowest",
+      "default_zips": [
+        { "zip": "10001", "city": "New York, NY", "note": "highest labor costs in the US" },
+        { "zip": "94102", "city": "San Francisco, CA", "note": "comparable to NYC, often higher for trades" },
+        { "zip": "60601", "city": "Chicago, IL", "note": "union labor market, mid-high" },
+        { "zip": "78701", "city": "Austin, TX", "note": "rapidly rising, still below coastal peaks" },
+        { "zip": "50301", "city": "Des Moines, IA", "note": "low labor cost benchmark" },
+        { "zip": "31401", "city": "Savannah, GA", "note": "low-cost South, strong contrast to NYC" }
+      ]
+    }
+  ],
+  "hardware": [
+    {
+      "id": "apple-macbook-air-m3",
+      "name": "MacBook Air 13\" M3 (8GB/256GB)",
+      "vendor": "Apple",
+      "plan": "Base config",
+      "live": true,
+      "method": "url_path",
+      "url_pattern": "https://www.apple.com/{country_path}/shop/buy-mac/macbook-air/13-inch",
+      "override_urls": {
+        "US": "https://www.apple.com/shop/buy-mac/macbook-air/13-inch",
+        "IN": "https://www.apple.com/in/shop/buy-mac/macbook-air/13-inch",
+        "BR": "https://www.apple.com/br/shop/buy-mac/macbook-air/13-inch",
+        "GB": "https://www.apple.com/uk/shop/buy-mac/macbook-air/13-inch",
+        "DE": "https://www.apple.com/de/shop/buy-mac/macbook-air/13-inch",
+        "TR": "https://www.apple.com/tr/shop/buy-mac/macbook-air/13-inch",
+        "MX": "https://www.apple.com/mx/shop/buy-mac/macbook-air/13-inch"
+      },
+      "markets": [
+        "US",
+        "IN",
+        "BR",
+        "MX",
+        "TR",
+        "GB",
+        "DE"
+      ],
+      "notes": "Apple hardware pricing varies primarily due to VAT/tax and import duties. Turkey and Brazil significantly higher. India often comparable or slightly lower on some models.",
+      "variance_type": "both"
+    },
+    {
+      "id": "apple-iphone-16",
+      "name": "iPhone 16 (128GB)",
+      "vendor": "Apple",
+      "plan": "Base storage",
+      "live": true,
+      "method": "url_path",
+      "url_pattern": "https://www.apple.com/{country_path}/shop/buy-iphone/iphone-16",
+      "override_urls": {
+        "US": "https://www.apple.com/shop/buy-iphone/iphone-16",
+        "IN": "https://www.apple.com/in/shop/buy-iphone/iphone-16",
+        "BR": "https://www.apple.com/br/shop/buy-iphone/iphone-16",
+        "GB": "https://www.apple.com/uk/shop/buy-iphone/iphone-16",
+        "DE": "https://www.apple.com/de/shop/buy-iphone/iphone-16",
+        "TR": "https://www.apple.com/tr/shop/buy-iphone/iphone-16"
+      },
+      "markets": [
+        "US",
+        "IN",
+        "BR",
+        "TR",
+        "GB",
+        "DE"
+      ],
+      "notes": "Brazil has the most expensive iPhones in the world due to import taxes (~60% premium over US).",
+      "variance_type": "both"
+    }
+  ]
+}

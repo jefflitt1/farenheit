@@ -1,0 +1,14 @@
+[
+  { "code": "US", "label": "United States", "currency": "USD", "locale": "en-US", "country_path": "us", "baseline": true },
+  { "code": "IN", "label": "India",          "currency": "INR", "locale": "en-IN", "country_path": "in",  "typical_delta": "-25 to -40%" },
+  { "code": "BR", "label": "Brazil",         "currency": "BRL", "locale": "pt-BR", "country_path": "br",  "typical_delta": "-15 to -25%" },
+  { "code": "MX", "label": "Mexico",         "currency": "MXN", "locale": "es-MX", "country_path": "mx",  "typical_delta": "-15 to -20%" },
+  { "code": "TR", "label": "Turkey",         "currency": "TRY", "locale": "tr-TR", "country_path": "tr",  "typical_delta": "-20 to -35%" },
+  { "code": "AR", "label": "Argentina",      "currency": "ARS", "locale": "es-AR", "country_path": "ar",  "typical_delta": "-25 to -45%" },
+  { "code": "PL", "label": "Poland",         "currency": "PLN", "locale": "pl-PL", "country_path": "pl",  "typical_delta": "-10 to -20%" },
+  { "code": "TH", "label": "Thailand",       "currency": "THB", "locale": "th-TH", "country_path": "th",  "typical_delta": "-10 to -18%" },
+  { "code": "PH", "label": "Philippines",    "currency": "PHP", "locale": "en-PH", "country_path": "ph",  "typical_delta": "-10 to -15%" },
+  { "code": "NG", "label": "Nigeria",        "currency": "NGN", "locale": "en-NG", "country_path": "ng",  "typical_delta": "-15 to -25%" },
+  { "code": "GB", "label": "United Kingdom", "currency": "GBP", "locale": "en-GB", "country_path": "gb",  "typical_delta": "+3 to +8%" },
+  { "code": "DE", "label": "Germany",        "currency": "EUR", "locale": "de-DE", "country_path": "de",  "typical_delta": "+2 to +5%" }
+]
