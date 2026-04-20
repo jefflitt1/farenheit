@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "version": "1.0.0",
+    "version": "1.1.0",
     "updated": "2026-04-20",
     "note": "live=true means regional URLs are directly addressable \u2014 no proxy needed. live=false means pricing is IP-based; reference data shown with freshness date. Community: PRs welcome to add products and correct URL patterns."
   },
@@ -25,7 +25,8 @@
         "GB",
         "DE"
       ],
-      "notes": "One of the most dramatic geo-pricing examples. Turkey and Argentina historically 70-80% cheaper than US."
+      "notes": "One of the most dramatic geo-pricing examples. Turkey and Argentina historically 70-80% cheaper than US.",
+      "payment_notes": "Argentina: gift cards work but accounts reset \u2248 every 6 months. Turkey/India more durable \u2014 prefer for long-term savings."
     },
     {
       "id": "netflix-standard",
@@ -46,7 +47,8 @@
         "DE"
       ],
       "notes": "India has a mobile-only plan unavailable elsewhere. Prices listed in local currency on country landing pages.",
-      "variance_type": "international"
+      "variance_type": "international",
+      "payment_notes": "\ud83d\udd34 HIGH \u2014 aggressive geo-detection; requires local payment method, not just VPN. Account suspension risk if billing country mismatches viewing location."
     },
     {
       "id": "youtube-premium",
@@ -515,7 +517,8 @@
         "DE"
       ],
       "notes": "One of the strongest URL-accessible geo-pricing examples. India ~40% cheaper.",
-      "variance_type": "international"
+      "variance_type": "international",
+      "payment_notes": "\ud83d\udfe1 MEDIUM \u2014 Wise INR card reliable via Stripe BIN check. Use Indian billing address on the Wise card; no VPN needed at payment step."
     },
     {
       "id": "microsoft-365-personal",
@@ -564,7 +567,8 @@
         "DE"
       ],
       "notes": "JetBrains has explicit currency selector \u2014 some of the most generous regional pricing in dev tools.",
-      "variance_type": "international"
+      "variance_type": "international",
+      "payment_notes": "\ud83d\udfe2 LOW \u2014 currency param accepted at checkout with any card. No VPN, no Wise needed; fully within ToS."
     },
     {
       "id": "autodesk-autocad",
