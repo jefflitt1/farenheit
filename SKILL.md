@@ -13,12 +13,12 @@ Find out how much a product costs when searched from different countries — and
 /farenheit --category [category]                — scan a full catalog category
 /farenheit --all                                — scan everything in the catalog
 /farenheit [product] --markets IN,TR,AR         — specific markets only
-/farenheit --proxy [product]                    — force geo-proxy even for catalog-known products
 /farenheit goodrx [drug]                        — v2a: intra-US zip comparison (auto-selects zips)
 /farenheit amazon [ASIN]                        — v2a: Amazon price by delivery zip (auto zips)
 /farenheit --category domestic                  — v2a: scan all domestic products (auto zips)
 /farenheit --portfolio [p1],[p2],[p3]           — aggregate savings across your subscription stack
 /farenheit --add [url]                          — cache a product entry for faster future lookups
+/farenheit --cached [product]                   — skip live scrape, show reference data only (fast, no proxy credits)
 ```
 
 **Categories:** `streaming` · `saas` · `software` · `cloud` · `gaming` · `hardware` · `domestic`
@@ -55,14 +55,14 @@ Read the user's input and determine:
 | `--portfolio [products]` | **Portfolio aggregation (v3)** | Step 4d below |
 | `--add [url]` | **Cache this entry** | Step 4e below — scrape, classify, write to catalog |
 | Catalog hit — `live: true` | **URL-based scrape** | Steps 3-5 (Firecrawl + FX) |
-| Catalog hit — `live: false` | **Reference data** | Skip scrape, show reference + offer `--proxy` |
+| Catalog hit — `live: false` | **Firecrawl geo-routing (v2b)** | Step 4c — proxy always on for IP-detected products |
 | **No catalog hit** | **Live Discovery** | Step 2.5 → Step 4f |
 | `domestic` category products | **Intra-US zip (v2a)** | Step 4b — uses auto-zips from catalog |
 | Insurance, Home services, Healthcare | **Intra-US zip (v2a)** | Step 4b — uses auto-zips from catalog |
 | E-commerce (Amazon), Gig economy | **Both** | International first, then domestic |
 | Hardware (Apple, Samsung) | **International + note sales tax** | Steps 3-5, add import duty note |
 | Cloud/infra (AWS, Vercel, DO) | **Control** | Reference data only, flag as low-variance |
-| `--proxy` flag present | **Firecrawl geo-routing (v2b)** | Step 4c below — overrides `live: false` |
+| `--cached` flag present | **Reference data** | Skip scrape, show cached reference + date |
 
 **If `variance_type: domestic` with no `--zip` flag:** Prompt the user:
 > "⚠ [Product] pricing is primarily domestic (US zip-code level). Add `--zip` with comma-separated zip codes to compare. Example: `--zip 10001,60601,90210,78701,98101`"
@@ -146,10 +146,9 @@ For each market in the product's `markets` array:
 
 **Rate limit:** Add a brief pause between Firecrawl calls when scanning multiple products to avoid hammering.
 
-**For `live: false` products** — use reference data directly:
-1. Read `reference` object from catalog entry
-2. Note `reference_date` — display as "(ref: [date])"
-3. No scraping needed — instant output
+**For `live: false` products** — these are IP-detected; route directly to Step 4c (geo-proxy). Reference data is never shown by default.
+
+**If `--cached` flag is present:** Skip Step 4c. Read `reference` object from catalog entry and display with `(ref: [date])` label. No scraping.
 
 **For `control: true` products** — display with a 🔒 label indicating no geo-pricing detected.
 
@@ -212,11 +211,11 @@ Note: include the `zip_variance_axis` from the catalog as the subtitle line ("Co
 
 ---
 
-### Step 4c — v2b: Firecrawl geo-routing (`--proxy` flag)
+### Step 4c — Firecrawl geo-routing (default for `live: false` products)
 
-Use this path when: `--proxy` flag is present OR user wants live data for a `live: false` product.
+Use this path when: product is `live: false` (IP-detected pricing) and `--cached` flag is NOT present.
 
-**What this enables:** Products currently marked `live: false` use IP-based detection and can't be scraped with a plain URL. Firecrawl's built-in `location` parameter routes the request through a geo-specific IP — no external proxy account needed.
+**What this does:** IP-detected products (Notion, Grammarly, Canva, Zoom, Netflix, Hulu, etc.) serve prices based on the requester's IP, not the URL path. Plain scraping always returns US prices. Firecrawl's built-in `location` parameter routes the request through a geo-specific residential IP — no external proxy account needed.
 
 For each market in the product's `markets` array:
 1. Look up the `country` code from `markets.json` (use `code` field, e.g. `"IN"`)
@@ -240,7 +239,7 @@ For each market in the product's `markets` array:
 
 **Output:** Same format as international output (Step 6), but mark source as `📡 Source: live scrape (geo-proxy) · FX: [date]` instead of `(ref: [date])`.
 
-**Which products benefit most from `--proxy`:** All `live: false` products in `saas`, `streaming` categories — Notion, Grammarly, Canva, Zoom, Hulu, Peacock, Paramount+. These are IP-detected services that previously could only show reference data.
+**Which products use this path by default:** All `live: false` products in `saas`, `streaming` categories — Notion, Grammarly, Canva, Zoom, Hulu, Peacock, Paramount+. These are IP-detected services; Step 4c runs automatically for them.
 
 ### Step 4d — v3: Portfolio mode (`--portfolio`)
 
@@ -308,7 +307,7 @@ Reads a pricing page, classifies it, checks for duplicates, and outputs a ready-
 
 3. **For `live: true` products:** Derive `url_pattern` by testing one non-US variant (e.g. scrape `[base]/in/pricing`). If it returns different pricing → pattern confirmed. Set placeholder: `{country_path}`.
 
-4. **For `live: false` products:** Extract US price from scraped page. Flag that other-market reference prices need manual research or `--proxy` to retrieve live.
+4. **For `live: false` products:** Extract US price from scraped page. Other markets will be fetched live via Step 4c (geo-proxy) when the product is queried.
 
 5. **Duplicate check:** Fuzzy-match product name against existing catalog. If a close match is found, say so before showing the generated entry.
 
@@ -344,8 +343,8 @@ Reads a pricing page, classifies it, checks for duplicates, and outputs a ready-
     "payment_notes": null
   }
 
-  ⚠ live: false — reference prices for IN/TR/AR/BR/MX need manual research
-    or: /farenheit --proxy linear  (gets live prices via Firecrawl geo-routing)
+  ⚠ live: false — IP-detected pricing. Live prices fetched automatically via Firecrawl
+    geo-proxy on next /farenheit linear invocation. Add --cached to skip live scrape.
 
   To contribute: copy JSON → append to catalog.json → submit PR to jefflitt1/farenheit
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -539,8 +538,9 @@ The FX normalization, risk scoring, and output formatting are handled by this sk
 
 - **v1:** International geo-pricing — 32 products, 12 markets, live scraping + reference data ✓
 - **v2a:** `--zip` mode — intra-US pricing via Playwright + Firecrawl (6 domestic products) ✓
-- **v2b:** `--proxy` flag — Firecrawl geo-routing for IP-based products ✓
+- **v2b:** Firecrawl geo-routing for IP-based products ✓
 - **v3:** `--portfolio`, `--add`, risk-scored output ✓
 - **v4:** Open-world mode — catalog is a cache, not a gate; live discovery for any product via Firecrawl search + geo-proxy ✓
+- **v1.3:** Geo-proxy is now always-on for `live: false` products (no `--proxy` flag); `--cached` flag for reference-data-only reads ✓
 - **v5:** `--watch` mode — price change alerts (requires Supabase persistence)
 - **v6:** `--travel` mode — Amadeus API for flight/hotel geo-pricing

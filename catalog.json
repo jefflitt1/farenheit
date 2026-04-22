@@ -26,7 +26,7 @@
         "DE"
       ],
       "notes": "One of the most dramatic geo-pricing examples. Turkey and Argentina historically 70-80% cheaper than US.",
-      "payment_notes": "Argentina: gift cards work but accounts reset \u2248 every 6 months. Turkey/India more durable \u2014 prefer for long-term savings."
+      "payment_notes": "Argentina: gift cards work but accounts reset ≈ every 6 months. Turkey/India more durable — prefer for long-term savings."
     },
     {
       "id": "netflix-standard",
@@ -48,7 +48,7 @@
       ],
       "notes": "India has a mobile-only plan unavailable elsewhere. Prices listed in local currency on country landing pages.",
       "variance_type": "international",
-      "payment_notes": "\ud83d\udd34 HIGH \u2014 aggressive geo-detection; requires local payment method, not just VPN. Account suspension risk if billing country mismatches viewing location."
+      "payment_notes": "🔴 HIGH — aggressive geo-detection; requires local payment method, not just VPN. Account suspension risk if billing country mismatches viewing location."
     },
     {
       "id": "youtube-premium",
@@ -65,7 +65,7 @@
         },
         "IN": {
           "usd": 1.88,
-          "local": "\u20b9159",
+          "local": "₹159",
           "currency": "INR"
         },
         "BR": {
@@ -75,7 +75,7 @@
         },
         "TR": {
           "usd": 1.5,
-          "local": "\u20ba49.99",
+          "local": "₺49.99",
           "currency": "TRY"
         },
         "AR": {
@@ -85,17 +85,17 @@
         },
         "GB": {
           "usd": 15.5,
-          "local": "\u00a312.99",
+          "local": "£12.99",
           "currency": "GBP"
         },
         "DE": {
           "usd": 13.99,
-          "local": "\u20ac12.99",
+          "local": "€12.99",
           "currency": "EUR"
         }
       },
       "reference_date": "2026-01",
-      "notes": "IP-based detection. Reference prices shown \u2014 verify with proxy for live data.",
+      "notes": "IP-based detection. Live prices fetched automatically via geo-proxy; reference data shown if --cached.",
       "variance_type": "international"
     },
     {
@@ -152,7 +152,7 @@
         },
         "IN": {
           "usd": 2.0,
-          "local": "\u20b9169",
+          "local": "₹169",
           "currency": "INR"
         },
         "BR": {
@@ -162,7 +162,7 @@
         },
         "GB": {
           "usd": 6.5,
-          "local": "\u00a35.99",
+          "local": "£5.99",
           "currency": "GBP"
         }
       },
@@ -186,7 +186,7 @@
         },
         "IN": {
           "usd": 4.0,
-          "local": "\u20b9330",
+          "local": "₹330",
           "currency": "INR"
         },
         "BR": {
@@ -196,17 +196,17 @@
         },
         "TR": {
           "usd": 3.0,
-          "local": "\u20ba99",
+          "local": "₺99",
           "currency": "TRY"
         },
         "GB": {
           "usd": 10.8,
-          "local": "\u00a38.50",
+          "local": "£8.50",
           "currency": "GBP"
         },
         "DE": {
           "usd": 10.8,
-          "local": "\u20ac10.00",
+          "local": "€10.00",
           "currency": "EUR"
         }
       },
@@ -249,7 +249,7 @@
         },
         "IN": {
           "usd": 5.5,
-          "local": "\u20b9459",
+          "local": "₹459",
           "currency": "INR"
         },
         "BR": {
@@ -259,12 +259,12 @@
         },
         "TR": {
           "usd": 4.0,
-          "local": "\u20ba130",
+          "local": "₺130",
           "currency": "TRY"
         },
         "GB": {
           "usd": 12.5,
-          "local": "\u00a39.99",
+          "local": "£9.99",
           "currency": "GBP"
         }
       },
@@ -328,7 +328,7 @@
         },
         "IN": {
           "usd": 12.0,
-          "local": "\u20b9999",
+          "local": "₹999",
           "currency": "INR"
         },
         "BR": {
@@ -338,7 +338,7 @@
         },
         "GB": {
           "usd": 28.5,
-          "local": "\u00a322.00",
+          "local": "£22.00",
           "currency": "GBP"
         }
       },
@@ -357,7 +357,7 @@
         "US"
       ],
       "control": true,
-      "notes": "CONTROL \u2014 GitHub does NOT geo-price. Same $4/mo globally. Useful baseline for comparisons.",
+      "notes": "CONTROL — GitHub does NOT geo-price. Same $4/mo globally. Useful baseline for comparisons.",
       "variance_type": "control"
     },
     {
@@ -375,12 +375,12 @@
         },
         "IN": {
           "usd": 8.0,
-          "local": "\u20b9665",
+          "local": "₹665",
           "currency": "INR"
         },
         "TR": {
           "usd": 6.0,
-          "local": "\u20ba199",
+          "local": "₺199",
           "currency": "TRY"
         }
       },
@@ -403,7 +403,7 @@
         },
         "IN": {
           "usd": 6.5,
-          "local": "\u20b9545",
+          "local": "₹545",
           "currency": "INR"
         },
         "BR": {
@@ -413,7 +413,7 @@
         },
         "GB": {
           "usd": 16.0,
-          "local": "\u00a312.99",
+          "local": "£12.99",
           "currency": "GBP"
         }
       },
@@ -435,12 +435,12 @@
         },
         "IN": {
           "usd": 5.0,
-          "local": "\u20b9415",
+          "local": "₹415",
           "currency": "INR"
         },
         "GB": {
           "usd": 13.0,
-          "local": "\u00a39.99",
+          "local": "£9.99",
           "currency": "GBP"
         }
       },
@@ -479,7 +479,7 @@
         },
         "IN": {
           "usd": 5.5,
-          "local": "\u20b9459",
+          "local": "₹459",
           "currency": "INR"
         },
         "BR": {
@@ -489,7 +489,7 @@
         },
         "GB": {
           "usd": 13.5,
-          "local": "\u00a310.79",
+          "local": "£10.79",
           "currency": "GBP"
         }
       },
@@ -518,7 +518,7 @@
       ],
       "notes": "One of the strongest URL-accessible geo-pricing examples. India ~40% cheaper.",
       "variance_type": "international",
-      "payment_notes": "\ud83d\udfe1 MEDIUM \u2014 Wise INR card reliable via Stripe BIN check. Use Indian billing address on the Wise card; no VPN needed at payment step."
+      "payment_notes": "🟡 MEDIUM — Wise INR card reliable via Stripe BIN check. Use Indian billing address on the Wise card; no VPN needed at payment step."
     },
     {
       "id": "microsoft-365-personal",
@@ -566,9 +566,9 @@
         "GB",
         "DE"
       ],
-      "notes": "JetBrains has explicit currency selector \u2014 some of the most generous regional pricing in dev tools.",
+      "notes": "JetBrains has explicit currency selector — some of the most generous regional pricing in dev tools.",
       "variance_type": "international",
-      "payment_notes": "\ud83d\udfe2 LOW \u2014 currency param accepted at checkout with any card. No VPN, no Wise needed; fully within ToS."
+      "payment_notes": "🟢 LOW — currency param accepted at checkout with any card. No VPN, no Wise needed; fully within ToS."
     },
     {
       "id": "autodesk-autocad",
@@ -585,7 +585,7 @@
         },
         "IN": {
           "usd": 30.0,
-          "local": "\u20b92,490/mo",
+          "local": "₹2,490/mo",
           "currency": "INR"
         },
         "BR": {
@@ -595,7 +595,7 @@
         },
         "GB": {
           "usd": 62.0,
-          "local": "\u00a349/mo",
+          "local": "£49/mo",
           "currency": "GBP"
         }
       },
@@ -611,7 +611,7 @@
       "plan": "Pro",
       "live": false,
       "method": "ip_based",
-      "notes": "Vercel bills in USD globally \u2014 limited geo-pricing. Included as a CONTROL example.",
+      "notes": "Vercel bills in USD globally — limited geo-pricing. Included as a CONTROL example.",
       "control": true,
       "reference": {
         "US": {
@@ -638,7 +638,7 @@
         "GB",
         "DE"
       ],
-      "notes": "Cloudflare Pro is $20/mo globally in USD \u2014 another good control. Country pages may show local currency.",
+      "notes": "Cloudflare Pro is $20/mo globally in USD — another good control. Country pages may show local currency.",
       "variance_type": "international"
     },
     {
@@ -770,7 +770,7 @@
       "live": true,
       "method": "query_param",
       "url_pattern": "https://store.steampowered.com/app/{steam_app_id}/?cc={market_lower}",
-      "notes": "Steam uses ?cc= param for country code. Prices vary per game. Use with a specific app ID \u2014 e.g. ?cc=tr for Turkey, ?cc=ar for Argentina. Turkey and Argentina routinely 70-85% cheaper. This entry is a template; specific games should be queried directly.",
+      "notes": "Steam uses ?cc= param for country code. Prices vary per game. Use with a specific app ID — e.g. ?cc=tr for Turkey, ?cc=ar for Argentina. Turkey and Argentina routinely 70-85% cheaper. This entry is a template; specific games should be queried directly.",
       "example_url": "https://store.steampowered.com/app/1245620/?cc=tr",
       "markets": [
         "US",
@@ -802,12 +802,36 @@
       "example_drug": "lisinopril",
       "zip_variance_axis": "pharmacy chain density + competition — sparse rural markets often have HIGHER prices than competitive urban ones",
       "default_zips": [
-        { "zip": "10001", "city": "New York, NY", "note": "maximum chain density, all major pharmacies competing" },
-        { "zip": "60601", "city": "Chicago, IL", "note": "large Midwest market" },
-        { "zip": "78701", "city": "Austin, TX", "note": "high-growth Sun Belt market" },
-        { "zip": "33101", "city": "Miami, FL", "note": "different chain mix, Latino pharmacy segment" },
-        { "zip": "50301", "city": "Des Moines, IA", "note": "mid-size market, fewer chains" },
-        { "zip": "39759", "city": "Starkville, MS", "note": "small town, limited competition — often most expensive" }
+        {
+          "zip": "10001",
+          "city": "New York, NY",
+          "note": "maximum chain density, all major pharmacies competing"
+        },
+        {
+          "zip": "60601",
+          "city": "Chicago, IL",
+          "note": "large Midwest market"
+        },
+        {
+          "zip": "78701",
+          "city": "Austin, TX",
+          "note": "high-growth Sun Belt market"
+        },
+        {
+          "zip": "33101",
+          "city": "Miami, FL",
+          "note": "different chain mix, Latino pharmacy segment"
+        },
+        {
+          "zip": "50301",
+          "city": "Des Moines, IA",
+          "note": "mid-size market, fewer chains"
+        },
+        {
+          "zip": "39759",
+          "city": "Starkville, MS",
+          "note": "small town, limited competition — often most expensive"
+        }
       ]
     },
     {
@@ -824,12 +848,36 @@
       "requires_asin": true,
       "zip_variance_axis": "fulfillment center proximity + seller shipping zone tiers — remote markets pay more",
       "default_zips": [
-        { "zip": "10001", "city": "New York, NY", "note": "NE hub, fast fulfillment" },
-        { "zip": "60601", "city": "Chicago, IL", "note": "Midwest hub" },
-        { "zip": "90001", "city": "Los Angeles, CA", "note": "West Coast hub" },
-        { "zip": "78701", "city": "Austin, TX", "note": "South Central" },
-        { "zip": "97201", "city": "Portland, OR", "note": "Pacific NW" },
-        { "zip": "99501", "city": "Anchorage, AK", "note": "remote — highest shipping surcharge" }
+        {
+          "zip": "10001",
+          "city": "New York, NY",
+          "note": "NE hub, fast fulfillment"
+        },
+        {
+          "zip": "60601",
+          "city": "Chicago, IL",
+          "note": "Midwest hub"
+        },
+        {
+          "zip": "90001",
+          "city": "Los Angeles, CA",
+          "note": "West Coast hub"
+        },
+        {
+          "zip": "78701",
+          "city": "Austin, TX",
+          "note": "South Central"
+        },
+        {
+          "zip": "97201",
+          "city": "Portland, OR",
+          "note": "Pacific NW"
+        },
+        {
+          "zip": "99501",
+          "city": "Anchorage, AK",
+          "note": "remote — highest shipping surcharge"
+        }
       ]
     },
     {
@@ -845,12 +893,36 @@
       "notes": "Service fees, surge pricing, and per-item markup vary by market density and local grocery competition.",
       "zip_variance_axis": "grocery store density + Instacart market penetration — sprawl suburbs often more expensive than dense urban",
       "default_zips": [
-        { "zip": "10001", "city": "New York, NY", "note": "highest density, strong competition" },
-        { "zip": "60601", "city": "Chicago, IL", "note": "large urban market" },
-        { "zip": "90210", "city": "Beverly Hills, CA", "note": "affluent, premium markup" },
-        { "zip": "78701", "city": "Austin, TX", "note": "rapidly growing market" },
-        { "zip": "85001", "city": "Phoenix, AZ", "note": "sprawl city, delivery distance drives cost" },
-        { "zip": "50301", "city": "Des Moines, IA", "note": "low-density, limited Instacart presence" }
+        {
+          "zip": "10001",
+          "city": "New York, NY",
+          "note": "highest density, strong competition"
+        },
+        {
+          "zip": "60601",
+          "city": "Chicago, IL",
+          "note": "large urban market"
+        },
+        {
+          "zip": "90210",
+          "city": "Beverly Hills, CA",
+          "note": "affluent, premium markup"
+        },
+        {
+          "zip": "78701",
+          "city": "Austin, TX",
+          "note": "rapidly growing market"
+        },
+        {
+          "zip": "85001",
+          "city": "Phoenix, AZ",
+          "note": "sprawl city, delivery distance drives cost"
+        },
+        {
+          "zip": "50301",
+          "city": "Des Moines, IA",
+          "note": "low-density, limited Instacart presence"
+        }
       ]
     },
     {
@@ -866,12 +938,36 @@
       "notes": "Delivery fees and service fees vary by restaurant density, driver supply, and market maturity.",
       "zip_variance_axis": "driver supply/demand density — thin markets (low driver density) charge significantly more",
       "default_zips": [
-        { "zip": "10001", "city": "New York, NY", "note": "saturated market, high driver supply" },
-        { "zip": "60601", "city": "Chicago, IL", "note": "mature market" },
-        { "zip": "78701", "city": "Austin, TX", "note": "college-heavy, high demand market" },
-        { "zip": "85001", "city": "Phoenix, AZ", "note": "sprawl — distance drives fees up" },
-        { "zip": "33101", "city": "Miami, FL", "note": "high tourism, variable demand" },
-        { "zip": "57501", "city": "Pierre, SD", "note": "state capital but tiny market — highest fees" }
+        {
+          "zip": "10001",
+          "city": "New York, NY",
+          "note": "saturated market, high driver supply"
+        },
+        {
+          "zip": "60601",
+          "city": "Chicago, IL",
+          "note": "mature market"
+        },
+        {
+          "zip": "78701",
+          "city": "Austin, TX",
+          "note": "college-heavy, high demand market"
+        },
+        {
+          "zip": "85001",
+          "city": "Phoenix, AZ",
+          "note": "sprawl — distance drives fees up"
+        },
+        {
+          "zip": "33101",
+          "city": "Miami, FL",
+          "note": "high tourism, variable demand"
+        },
+        {
+          "zip": "57501",
+          "city": "Pierre, SD",
+          "note": "state capital but tiny market — highest fees"
+        }
       ]
     },
     {
@@ -887,12 +983,36 @@
       "notes": "Auto insurance rates are almost entirely state-driven, then zip-level within state. Same driver profile, same car, 3-5x price difference across states.",
       "zip_variance_axis": "state insurance regulation + urban crime/accident rates — MI/LA/FL are consistently most expensive, ME/IA/ID cheapest",
       "default_zips": [
-        { "zip": "48226", "city": "Detroit, MI", "note": "historically highest auto insurance rates in the US" },
-        { "zip": "70112", "city": "New Orleans, LA", "note": "2nd highest nationally" },
-        { "zip": "33101", "city": "Miami, FL", "note": "fraud-heavy market, high rates" },
-        { "zip": "07001", "city": "Avenel, NJ", "note": "high-cost state" },
-        { "zip": "52401", "city": "Cedar Rapids, IA", "note": "low-cost state benchmark" },
-        { "zip": "04101", "city": "Portland, ME", "note": "one of the cheapest states for auto insurance" }
+        {
+          "zip": "48226",
+          "city": "Detroit, MI",
+          "note": "historically highest auto insurance rates in the US"
+        },
+        {
+          "zip": "70112",
+          "city": "New Orleans, LA",
+          "note": "2nd highest nationally"
+        },
+        {
+          "zip": "33101",
+          "city": "Miami, FL",
+          "note": "fraud-heavy market, high rates"
+        },
+        {
+          "zip": "07001",
+          "city": "Avenel, NJ",
+          "note": "high-cost state"
+        },
+        {
+          "zip": "52401",
+          "city": "Cedar Rapids, IA",
+          "note": "low-cost state benchmark"
+        },
+        {
+          "zip": "04101",
+          "city": "Portland, ME",
+          "note": "one of the cheapest states for auto insurance"
+        }
       ]
     },
     {
@@ -907,15 +1027,44 @@
       "url_pattern": "https://www.thumbtack.com/cost/{job_type}/",
       "notes": "Home service quotes vary 3-5x by local labor market and cost of living. NYC vs. Des Moines is the canonical example.",
       "requires_job_type": true,
-      "example_jobs": ["house-cleaning", "lawn-mowing", "hvac-repair", "plumber"],
+      "example_jobs": [
+        "house-cleaning",
+        "lawn-mowing",
+        "hvac-repair",
+        "plumber"
+      ],
       "zip_variance_axis": "local labor market + cost of living index — SF/NYC highest, rural South/Midwest lowest",
       "default_zips": [
-        { "zip": "10001", "city": "New York, NY", "note": "highest labor costs in the US" },
-        { "zip": "94102", "city": "San Francisco, CA", "note": "comparable to NYC, often higher for trades" },
-        { "zip": "60601", "city": "Chicago, IL", "note": "union labor market, mid-high" },
-        { "zip": "78701", "city": "Austin, TX", "note": "rapidly rising, still below coastal peaks" },
-        { "zip": "50301", "city": "Des Moines, IA", "note": "low labor cost benchmark" },
-        { "zip": "31401", "city": "Savannah, GA", "note": "low-cost South, strong contrast to NYC" }
+        {
+          "zip": "10001",
+          "city": "New York, NY",
+          "note": "highest labor costs in the US"
+        },
+        {
+          "zip": "94102",
+          "city": "San Francisco, CA",
+          "note": "comparable to NYC, often higher for trades"
+        },
+        {
+          "zip": "60601",
+          "city": "Chicago, IL",
+          "note": "union labor market, mid-high"
+        },
+        {
+          "zip": "78701",
+          "city": "Austin, TX",
+          "note": "rapidly rising, still below coastal peaks"
+        },
+        {
+          "zip": "50301",
+          "city": "Des Moines, IA",
+          "note": "low labor cost benchmark"
+        },
+        {
+          "zip": "31401",
+          "city": "Savannah, GA",
+          "note": "low-cost South, strong contrast to NYC"
+        }
       ]
     }
   ],

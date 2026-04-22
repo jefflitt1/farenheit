@@ -52,7 +52,7 @@ Open a Claude Code session. Type `/farenheit`. That's it.
 **What Claude Code does under the hood:** Claude reads `SKILL.md`, fetches live prices using the Firecrawl MCP (for URL-based products), fetches live exchange rates from Frankfurter (free, no auth), and formats a sorted comparison table in your terminal. For zip-mode queries, it uses the `unified-browser` MCP (Playwright).
 
 **MCPs required:**
-- `firecrawl` — web scraping (for `live: true` products and `--proxy` flag)
+- `firecrawl` — web scraping (URL-based products + geo-proxy for IP-detected products)
 - `unified-browser` — Playwright browser automation (for `--zip` mode)
 - Neither requires paid accounts beyond whatever plan you're already on
 
@@ -61,27 +61,28 @@ Open a Claude Code session. Type `/farenheit`. That's it.
 ## Usage
 
 ```bash
-/farenheit [any product name]                     # open-world — works with or without catalog entry (v4)
+/farenheit [any product name]                     # geo-pricing for any product (catalog or live discovery)
 /farenheit --category [category]                  # scan a full category
 /farenheit --all                                  # scan everything in the catalog
 /farenheit [product] --markets IN,TR,AR           # specific markets only
-/farenheit --proxy [product]                      # force live scrape via geo-routing (v2b)
 /farenheit goodrx [drug]                          # intra-US zip comparison (v2a — auto-selects zips)
 /farenheit --category domestic                    # scan all domestic products (auto zips)
 /farenheit --portfolio [p1],[p2],[p3]             # aggregate savings across your stack (v3)
 /farenheit --add [pricing url]                    # auto-generate a catalog entry from any page (v3)
+/farenheit --cached [product]                     # skip live scrape, return reference data (fast, no proxy credits)
 ```
 
 **Categories:** `streaming` · `saas` · `software` · `cloud` · `gaming` · `hardware` · `domestic`
 
 **Examples:**
 ```bash
-/farenheit spotify                         # known product — uses catalog cache
+/farenheit spotify                         # known product — URL-based scrape
+/farenheit grammarly                       # IP-detected product — auto geo-proxy
 /farenheit cursor                          # unknown product — live discovery (v4)
 /farenheit perplexity pro                  # unknown product — live discovery (v4)
 /farenheit adobe creative cloud
 /farenheit --category gaming
-/farenheit --proxy grammarly
+/farenheit --cached grammarly              # fast reference read, no proxy credits
 /farenheit goodrx lisinopril
 /farenheit --portfolio spotify,adobe creative cloud,notion,grammarly
 /farenheit --add https://linear.app/pricing
@@ -115,7 +116,7 @@ Not all geo-pricing works the same way. farenheit routes each query based on whe
 - **International query** → `/farenheit [product]` — compares across 12 countries
 - **Intra-US query** → `/farenheit [product] --zip 10001,60601,90210,78701,98101`
 - **Both** → run international first, then domestic if the service type warrants it (hardware, gig economy)
-- **IP-based product, live data** → add `--proxy` flag to any product that normally shows reference data
+- **Skip live scrape** → add `--cached` for a fast reference-data read (no proxy credits used)
 
 ---
 
@@ -125,9 +126,9 @@ Not all geo-pricing works the same way. farenheit routes each query based on whe
 farenheit calls the Firecrawl MCP to fetch each regional pricing page and extracts the current price. No proxy needed — these companies expose regional pricing via country-specific URLs (e.g. `adobe.com/in/`, `spotify.com/tr/`).
 
 **For products with IP-based pricing** (`live: false`):
-farenheit shows curated reference prices with a freshness date. By default these are static snapshots — services like Notion or Grammarly detect your location via IP, so a plain URL request always returns your home-country price.
+Services like Notion, Grammarly, and Netflix detect your location via IP — a plain URL request always returns your home-country price. farenheit automatically routes these through Firecrawl's built-in geo-proxy (`location` + `proxy: stealth`), appearing to originate from each target country. No Smartproxy or Bright Data account required. Your home IP is never exposed to the vendor being checked.
 
-**With `--proxy` flag (v2b):** Firecrawl has a built-in `location` parameter that routes the scrape through a geo-specific IP. No Smartproxy or Bright Data subscription required — it uses Firecrawl's own residential proxy pool. Adding `--proxy` flips any `live: false` product to a live scrape.
+**To skip live scraping:** Add `--cached` to get reference data instantly (no proxy credits used). Useful when you just want a ballpark and don't need today's prices.
 
 **For intra-US zip pricing** (`--zip` flag, v2a):
 Some products don't vary by country at all — they vary by US zip code. GoodRx drug prices, Amazon delivery prices, Instacart fees, and insurance quotes all work this way. farenheit uses the `unified-browser` MCP (Playwright) to automate zip entry and read back the displayed price for each zip you specify.
@@ -144,7 +145,7 @@ All prices are converted to USD using live exchange rates from [Frankfurter](htt
 | Category   | Products | Mode | Notes |
 |------------|----------|------|-------|
 | Streaming  | 6        | International | Spotify, Netflix, Disney+, Apple TV+ live |
-| SaaS       | 12       | International | Canva, 1Password, Webflow, Zoom + `--proxy` for rest |
+| SaaS       | 12       | International | URL-based for some; geo-proxy auto-used for IP-detected (Notion, Grammarly, Canva, Zoom) |
 | Software   | 4        | International | Adobe CC, Microsoft 365, JetBrains live |
 | Cloud      | 4        | Control | USD-global — included as control examples |
 | Gaming     | 5        | International | Xbox, PlayStation, Nintendo, Steam live |
@@ -272,19 +273,19 @@ The underreported story: the same product can cost meaningfully different amount
 
 ---
 
-## v2b — Geo-proxy for IP-based products
+## v2b — Geo-proxy for IP-based products (always-on)
 
-Many products in the `saas` and `streaming` categories are marked `live: false` because they detect your location by IP — a plain URL request always returns your home-country price. The `--proxy` flag fixes this without any paid proxy subscription.
+Many products in the `saas` and `streaming` categories are marked `live: false` because they detect your location by IP — a plain URL request always returns your home-country price. farenheit routes these automatically through Firecrawl's built-in geo-proxy, with no paid proxy subscription required.
 
 ```bash
-/farenheit --proxy notion
-/farenheit --proxy grammarly
-/farenheit --proxy hulu
+/farenheit notion      # auto geo-proxy — fetches live prices across 12 markets
+/farenheit grammarly
+/farenheit hulu
 ```
 
-**How it works:** Firecrawl has a built-in `location` parameter (`{country: "IN", languages: ["en-IN"]}`) combined with `proxy: "stealth"` that routes the scrape through a geo-specific residential IP. This is part of the Firecrawl MCP — no Smartproxy, Bright Data, or external proxy account required.
+**How it works:** Firecrawl has a built-in `location` parameter (`{country: "IN", languages: ["en-IN"]}`) combined with `proxy: "stealth"` that routes the scrape through a geo-specific residential IP. This is part of the Firecrawl MCP — no Smartproxy, Bright Data, or external proxy account required. Your home IP is never exposed to the vendor being checked.
 
-Adding `--proxy` flips any `live: false` product to a live scrape. Products that benefit most: Notion, Grammarly, Canva (paid tiers), Zoom, Hulu, Peacock, Paramount+.
+Products that use this path automatically: Notion, Grammarly, Canva (paid tiers), Zoom, Hulu, Peacock, Paramount+. To skip live scraping and return reference data only, add `--cached`.
 
 ---
 
@@ -292,9 +293,10 @@ Adding `--proxy` flips any `live: false` product to a live scrape. Products that
 
 - **v1:** International geo-pricing — 32 products, 12 markets, live scraping + reference data ✓
 - **v2a:** `--zip` mode — intra-US pricing via Playwright + Firecrawl (6 domestic products) ✓
-- **v2b:** `--proxy` flag — Firecrawl geo-routing for IP-based products ✓
+- **v2b:** Firecrawl geo-routing for IP-based products ✓
 - **v3:** `--portfolio`, `--add`, risk-scored "How to pay" output ✓
 - **v4:** Open-world mode — any product works, catalog is a cache not a gate (Firecrawl search + URL probe + auto geo-proxy) ✓
+- **v1.3:** Geo-proxy is now always-on for `live: false` products (no `--proxy` flag needed); `--cached` flag for reference-data-only reads ✓
 - **v5:** `--watch` mode — price change alerts (requires Supabase persistence)
 - **v6:** `--travel` mode — Amadeus API for flight/hotel geo-pricing
 
