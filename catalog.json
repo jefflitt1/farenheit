@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "version": "1.2.0",
-    "updated": "2026-04-20",
-    "note": "v1.2 open-world: catalog is a speed cache, not a gate. Unknown products go through Step 2.5 live discovery (Firecrawl search + URL probe + auto geo-proxy). live=true means regional URLs are directly addressable. live=false means pricing is IP-based; reference data shown with freshness date. Community: PRs welcome to add products and correct URL patterns."
+    "version": "1.3.0",
+    "updated": "2026-04-22",
+    "note": "v1.3: geo-proxy always-on for live=false products (no flag needed); --cached for reference-data-only reads. v1.2 open-world: catalog is a speed cache, not a gate. Unknown products go through Step 2.5 live discovery (Firecrawl search + URL probe + auto geo-proxy). live=true means regional URLs are directly addressable. live=false means pricing is IP-based; reference data shown with freshness date. Community: PRs welcome to add products and correct URL patterns."
   },
   "streaming": [
     {
