@@ -1,8 +1,30 @@
+---
+name: farenheit
+description: Use when comparing international or domestic prices for digital products, checking geo-pricing arbitrage, or scanning a product category for savings
+execution_model: any
+---
+
 # farenheit
 
 **Geographic price transparency for digital products.**
 
 Find out how much a product costs when searched from different countries — and how much you could save.
+
+---
+
+## Requirements
+
+- **Reference-data lookups** (`--cached`, and any `live: false` product before its first live check) — zero
+  dependencies. Pure `catalog.json`/`markets.json` lookup + arithmetic. Works with no MCP servers
+  configured at all.
+- **Live scraping** (default for `live: true` products, geo-proxy for `live: false`, live discovery,
+  `--add`) — needs a web-scraping MCP tool such as Firecrawl's `firecrawl_scrape` (public server:
+  `npx -y firecrawl-mcp`, needs your own `FIRECRAWL_API_KEY`). See `.mcp.json` for a starter config.
+- **Intra-US zip mode, Method B** (Amazon/Instacart/DoorDash/insurance/home-services) — needs a
+  browser-automation MCP tool (Playwright-based) exposing navigate/type/click/read-content actions.
+  Not bundled — configure your own.
+- Without live-scrape/browser tools configured, use `--cached` and stick to reference-data products —
+  the skill should degrade gracefully, not fail.
 
 ---
 
@@ -93,7 +115,7 @@ Pick the most authoritative result (official domain, not resellers or review sit
 
 Test whether the product uses URL-addressable regional pricing by probing common patterns:
 1. Try appending `/in/`, `/tr/`, `/br/` to the base pricing URL — or try `?country=IN`, `?region=IN`
-2. Call `mcp__firecrawl__firecrawl_scrape` on the US URL and one variant (e.g. `/in/`)
+2. Call your scraping tool on the US URL and one variant (e.g. `/in/`)
 3. **If the variant returns different prices → `live: true` path.** Use Step 4 (URL scraping across all markets).
 4. **If the variant returns the same price or 404 → `live: false` path.** Use Step 4f (geo-proxy detection).
 
@@ -130,13 +152,15 @@ If Frankfurter is unavailable, proceed with a warning: "⚠ Live FX unavailable 
 
 ### Step 4 — Fetch prices (per product)
 
-**For `live: true` products** — use Firecrawl to scrape each regional URL:
+**For `live: true` products** — use a web-scraping MCP tool to scrape each regional URL (see
+Requirements above; examples below use Firecrawl's `firecrawl_scrape` shape — adapt to whatever
+scraping tool you have configured):
 
 For each market in the product's `markets` array:
 1. Resolve the URL using `url_pattern` or `override_urls`
    - Replace `{country_path}` with `markets.json → country_path` for that market
    - Replace `{country_path_lower}` with the lowercase version
-2. Call `mcp__firecrawl__firecrawl_scrape` with:
+2. Call your scraping tool with:
    ```json
    { "url": "[resolved_url]", "formats": ["markdown"] }
    ```
@@ -168,22 +192,22 @@ If the user provides `--zip` override, use theirs instead. Otherwise: use `defau
 
 **Method A — `url_param_zip` products (GoodRx):**
 
-GoodRx embeds zip as a URL parameter — no browser automation required:
+GoodRx embeds zip as a URL parameter — no browser automation required, just your scraping tool:
 1. Read `default_zips` from the catalog entry (or user `--zip` override)
 2. For each zip: build URL from `url_pattern` with `{zip}` and `{drug_name}` replaced
-3. Call `mcp__firecrawl__firecrawl_scrape` on each URL with `{ "formats": ["markdown"] }`
+3. Call your scraping tool on each URL with `{ "formats": ["markdown"] }`
 4. Extract: lowest cash price shown + pharmacy name
 5. Build comparison table sorted cheapest to most expensive
 
 **Method B — `browser_zip` products (Amazon, Instacart, DoorDash, insurance, home services):**
 
-These require form interaction. Use `unified-browser` MCP (Playwright):
+These require form interaction. Use a browser-automation MCP tool (Playwright-based):
 
 For each zip in `default_zips` (or user override):
-1. `mcp__unified-browser__browser_navigate` → product URL
+1. Navigate to the product URL
 2. Follow the `browser_steps` string from the catalog entry
-3. Use `mcp__unified-browser__browser_type` to enter zip, `browser_click` to submit
-4. `mcp__unified-browser__browser_content` or `browser_snapshot` to read the displayed price
+3. Type the zip into the form field, click submit
+4. Read the page content/snapshot to find the displayed price
 5. Record price + city label (from `default_zips[].city`), move to next
 
 **Output format for zip mode:**
@@ -215,12 +239,12 @@ Note: include the `zip_variance_axis` from the catalog as the subtitle line ("Co
 
 Use this path when: product is `live: false` (IP-detected pricing) and `--cached` flag is NOT present.
 
-**What this does:** IP-detected products (Notion, Grammarly, Canva, Zoom, Netflix, Hulu, etc.) serve prices based on the requester's IP, not the URL path. Plain scraping always returns US prices. Firecrawl's built-in `location` parameter routes the request through a geo-specific residential IP — no external proxy account needed.
+**What this does:** IP-detected products (Notion, Grammarly, Canva, Zoom, Netflix, Hulu, etc.) serve prices based on the requester's IP, not the URL path. Plain scraping always returns US prices. A geo-routing-capable scraping tool (Firecrawl's built-in `location` parameter is the reference example) routes the request through a geo-specific residential IP — no external proxy account needed.
 
 For each market in the product's `markets` array:
 1. Look up the `country` code from `markets.json` (use `code` field, e.g. `"IN"`)
 2. Look up the `locale` from `markets.json` (e.g. `"en-IN"`)
-3. Call `mcp__firecrawl__firecrawl_scrape` with geo-routing parameters:
+3. Call your scraping tool with geo-routing parameters (Firecrawl shape shown; adapt to your tool):
    ```json
    {
      "url": "[product's main pricing URL]",

@@ -1,0 +1,12 @@
+{
+  "_comment": "Optional — only needed for live-scrape features (default for live:true products, geo-proxy, live discovery, --add). The base catalog lookup (/farenheit spotify, --category, --all, --cached) works with no MCP servers configured. Browser-automation zip mode (Amazon/Instacart/DoorDash/insurance/home-services, Method B in the intra-US zip section) needs its own Playwright-based MCP server too — not included here since there's no single standard public package for it; bring your own.",
+  "mcpServers": {
+    "firecrawl": {
+      "command": "npx",
+      "args": ["-y", "firecrawl-mcp"],
+      "env": {
+        "FIRECRAWL_API_KEY": "[your own key — https://firecrawl.dev]"
+      }
+    }
+  }
+}
