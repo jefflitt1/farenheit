@@ -8,6 +8,8 @@
 
 Companies charge different prices for the same product depending on where you appear to be browsing from. farenheit surfaces those differences — live where possible, reference data where not — and tells you exactly how much you're leaving on the table.
 
+If this skill is useful to you, please give it a ⭐ on [GitHub](https://github.com/jefflitt1/farenheit) — it helps others find it.
+
 ```
 /farenheit spotify
 
@@ -307,3 +309,5 @@ Products that use this path automatically: Notion, Grammarly, Canva (paid tiers)
 MIT — do whatever you want with it.
 
 Built by [Jeff Littell](https://github.com/jefflitt1) / [JGL Ventures](https://jglventures.com).
+
+If farenheit saved you money, a ⭐ on [GitHub](https://github.com/jefflitt1/farenheit) helps other people find it.
